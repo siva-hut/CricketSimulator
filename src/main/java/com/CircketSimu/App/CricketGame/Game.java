@@ -18,6 +18,7 @@ public class Game {
         this.bowlingTeam =  bowlingTeam;
         gameId = UUID.randomUUID();
     }
+    //Instance variables
     private UUID gameId;
     private LocalTime startTime;
     private Team battingTeam;
@@ -26,6 +27,7 @@ public class Game {
     private int innings = 1;
     private boolean gameOver = false;
     boolean noBall = false;
+    //Getters
     private Overs getOvers() {
         return overs;
     }
@@ -44,21 +46,16 @@ public class Game {
     private Team getBowlingTeam() {
         return bowlingTeam;
     }
-
+    private int getInnings() {
+        return innings;
+    }
+    //Setters
     private void setOvers(Overs overs) {
         this.overs = overs;
     }
 
-    private int getInnings() {
-        return innings;
-    }
-
     private void setInnings(int innings) {
         this.innings = innings;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
     }
 
     private void setGameOver(boolean gameOver) {
@@ -68,29 +65,40 @@ public class Game {
     {
         return battingTeam.getBatsman();
     }
+    //Utility
+    public boolean isGameOver() {
+        return gameOver;
+    }
     public ScoreCard simulateNextBall()
-    {   Bowler bowler = (Bowler) getBowlingTeam().getBowler();
+    {   Player bowler = getBowlingTeam().getBowler();
         char run;
         if(noBall) {
             run = RandomGenerator.generateNoBallOutCome();
             noBall = false;
         }
         else
-        run = getBattingTeam().getBatsman().simulateRun();
+        {
+            run = getBattingTeam().getBatsman().simulateRun();
+        }
+        bowler.oversBowled.nextBall();
+        //Wicket
         if(run == 'w'){
             bowler.wicketTaken();
             getBattingTeam().increaseWicketLost();
         }
+        //Wide
         else if(run == 'W')
         {
             bowler.addRunsGiven(1);
             getBattingTeam().increaseScore(1);
             return createScoreCard(run);
         }
+        //Noball
         else if(run == 'N')
         {   noBall = true;
             return createScoreCard(run);
         }
+        //Runs
         else
         {   int nRun = run-'0' ;
             getBattingTeam().getBatsman().updateRun(nRun);
@@ -114,14 +122,21 @@ public class Game {
     private ScoreCard createScoreCard(char run)
     {
         ScoreCard scoreCard = new ScoreCard();
-
         scoreCard.setBatsmanScore(String.valueOf(getBatsman().getRunsScored()));
         scoreCard.setBatsmanName(getBatsman().getPlayerName());
         scoreCard.setCurrentBallScore(String.valueOf(run));
         scoreCard.setBallsRemaining(String.valueOf(overs.ballsRemaining()));
         scoreCard.setBowlerName(getBowlingTeam().getBowler().getPlayerName());
-        Bowler b = (Bowler)getBowlingTeam().getBowler();
-        scoreCard.setWicketsTaken(String.valueOf(b.getWicketsTaken()));
+        scoreCard.setWicketsTaken(String.valueOf(getBowlingTeam().getBowler().getWicketsTaken()));
+        scoreCard.setBallsFaced(String.valueOf(getBatsman().getBallsFaced()));
+        scoreCard.setBattingTeamScore(String.valueOf(getBattingTeam().getScore()));
+        scoreCard.setBatsmanScore(String.valueOf(getBatsman().getRunsScored()));
+        scoreCard.setBowlerRunsGiven(String.valueOf(getBowlingTeam().getBowler().getRunsGiven()));
+        scoreCard.setWicketsTaken(String.valueOf(getBowlingTeam().getBowler().getWicketsTaken()));
+        scoreCard.setBallsBowled(String.valueOf(getBowlingTeam().getBowler().oversBowled.getOvers()));
+        scoreCard.setBowlingTeamScore(String.valueOf(getBowlingTeam().getScore()));
+        scoreCard.setBowlingTeam(getBowlingTeam().getTeamName());
+        scoreCard.setCurrentOver(overs.getOvers());
         return scoreCard;
     }
     private void checkGameStatus()

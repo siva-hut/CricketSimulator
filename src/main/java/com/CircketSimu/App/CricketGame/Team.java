@@ -28,11 +28,11 @@ public class Team {
         createTeamPlayers(fakeNames);
     }
     void createTeamPlayers(String [] playerNames)
-    {   bowlerIndex = 6;
+    {   bowlerIndex = RandomGenerator.random.nextInt(4,9);
         players = new Vector<>(11);
-        for (int i=0;i<Math.min(playerNames.length,11);i++)
+        for (int i=0;i<11;i++)
         {   //Need changes
-            if(i<=5)
+            if(i<bowlerIndex)
             players.add(i, new Batsman(playerNames[i]));
             else
             players.add(i, new Bowler(playerNames[i]));
@@ -79,9 +79,6 @@ public class Team {
     }
     public void changeBowler()
     {
-        bowlerIndex++;
-        System.out.println(bowlerIndex);
-        if(bowlerIndex>=players.size())
-        bowlerIndex = 6;
+        bowlerIndex = RandomGenerator.random.nextInt(4,11);
     }
 }

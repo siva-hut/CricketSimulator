@@ -4,6 +4,7 @@ public class Batsman extends Player {
     Batsman(String playerName)
     {
         setPlayerName(playerName);
+        oversBowled = new Overs(0);
     }
     @Override
     public char simulateRun()
