@@ -19,6 +19,12 @@ public class Overs {
             decimal = 0;
         }
     }
+    public boolean overCompleted()
+    {
+        if(decimal==0)
+            return true;
+        return false;
+    }
     public int ballsRemaining()
     {
         return (totalOvers*6) - ((number*6)+ decimal);
@@ -27,5 +33,9 @@ public class Overs {
     {
         this.number=0;
         this.decimal=0;
+    }
+    public int oversLeft()
+    {
+        return totalOvers-number;
     }
 }

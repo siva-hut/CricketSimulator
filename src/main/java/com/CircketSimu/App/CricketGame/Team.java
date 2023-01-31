@@ -1,10 +1,10 @@
 package com.CircketSimu.App.CricketGame;
 
+import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import java.util.Vector;
 
 public class Team {
@@ -12,22 +12,30 @@ public class Team {
     private String teamName;
     private int score;
     private int wicketsLost;
+    private int bowlerIndex;
     public Team(String teamName, String [] playerNames) {
         this.teamName = teamName;
-        score = 0;
-        wicketsLost = 0;
         createTeamPlayers(playerNames);
     }
-    void createTeamPlayers(String [] playerNames)
+    public Team(String teamName)
     {
-        System.out.println(playerNames.length);
+        Faker faker = new Faker();
+        String [] fakeNames = new String [11];
+        for(int i=0;i<11;i++)
+        {
+            fakeNames[i] = faker.name().name();
+        }
+        createTeamPlayers(fakeNames);
+    }
+    void createTeamPlayers(String [] playerNames)
+    {   bowlerIndex = 6;
         players = new Vector<>(11);
-        for (int i=0;i<11;i++)
-        {   if(i<=5)
+        for (int i=0;i<Math.min(playerNames.length,11);i++)
+        {   //Need changes
+            if(i<=5)
             players.add(i, new Batsman(playerNames[i]));
-        else
+            else
             players.add(i, new Bowler(playerNames[i]));
-
         }
     }
     public int getScore() {
@@ -64,5 +72,16 @@ public class Team {
     public void increaseScore(int run)
     {
         score+=run;
+    }
+    public Player getBowler()
+    {  // System.out.println(bowlerIndex);
+        return players.get(bowlerIndex);
+    }
+    public void changeBowler()
+    {
+        bowlerIndex++;
+        System.out.println(bowlerIndex);
+        if(bowlerIndex>=players.size())
+        bowlerIndex = 6;
     }
 }

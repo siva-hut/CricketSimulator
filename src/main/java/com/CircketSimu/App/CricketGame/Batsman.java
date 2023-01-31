@@ -7,9 +7,9 @@ public class Batsman extends Player {
     }
     @Override
     public char simulateRun()
-    {   char gen;
-        gen = Player.generator();
-        return gen;
+    {   char outcome;
+        outcome = RandomGenerator.generateOutCome();
+        return outcome;
     }
 
 }

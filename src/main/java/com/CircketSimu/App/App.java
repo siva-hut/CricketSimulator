@@ -1,7 +1,7 @@
 package com.CircketSimu.App;
 
 import com.CircketSimu.App.CricketGame.Game;
-import com.CircketSimu.App.CricketGame.Scheduler;
+import com.CircketSimu.App.Controller.GameController;
 import com.CircketSimu.App.CricketGame.Team;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,11 +20,10 @@ public class App {
 		System.out.println(g.team1.name);
 	*/
 		String [] arr = {"sia","jnic","ceni","wich","ciewh","ewffw","wvvrfw","fwefwe","ce23","scew","acaef"};
-		Team team1 = new Team("ssr",arr);
-		Team team2 = new Team("kkr",arr);
-
+		Team team1 = new Team("ssr");
+		Team team2 = new Team("kkr");
 		Game g =new Game(team1,team2,20);
-		Scheduler.addGame(g);
+		GameController.addGame(g);
 	}
 
 }
