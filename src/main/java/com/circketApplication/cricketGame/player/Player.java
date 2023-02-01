@@ -1,9 +1,9 @@
-package com.CircketSimu.App.CricketGame;
+package com.circketApplication.cricketGame.player;
 
-import java.util.Random;
+import com.circketApplication.cricketGame.util.Overs;
 
 public abstract class Player {
-    public Overs oversBowled;
+    public Overs oversBowled = new Overs(0);
     private int runsGiven = 0;
     private int wicketsTaken = 0;
     public int getRunsGiven() {
@@ -37,7 +37,7 @@ public abstract class Player {
         return ballsFaced;
     }
     private int ballsFaced =0;
-    public abstract char simulateRun();
+    public abstract char simulateRun(boolean noBall);
     public void updateRun(int run)
     {
         runsScored+=run;

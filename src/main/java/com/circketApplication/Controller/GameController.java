@@ -1,17 +1,16 @@
-package com.CircketSimu.App.Controller;
+package com.circketApplication.Controller;
 
-import com.CircketSimu.App.CricketGame.Game;
+import com.circketApplication.cricketGame.Game;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class GameController {
     public static ArrayList<Game> activeGameArray = new ArrayList<Game>();
-    @Scheduled(fixedRate=10)
+    @Scheduled(fixedRate=200)
     public static void runGame()
     {
         Iterator<Game> itr= activeGameArray.iterator();
@@ -35,3 +34,4 @@ public class GameController {
         activeGameArray.add(game);
     }
 }
+// Game result printing

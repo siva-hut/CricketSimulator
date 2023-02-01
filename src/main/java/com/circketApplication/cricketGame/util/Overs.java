@@ -1,4 +1,4 @@
-package com.CircketSimu.App.CricketGame;
+package com.circketApplication.cricketGame.util;
 
 public class Overs {
     private int number;

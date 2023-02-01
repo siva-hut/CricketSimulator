@@ -1,9 +1,10 @@
-package com.CircketSimu.App.DataModels;
+package com.circketApplication.DataModels;
 
-import com.CircketSimu.App.CricketGame.Game;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ScoreCard {
+    String wicketsLost;
     String bowlerName;
     String wicketsTaken;
     String batsmanName;
@@ -24,7 +25,9 @@ public class ScoreCard {
     public void setCurrentOver(String currentOver) {
         this.currentOver = currentOver;
     }
-
+    public void setWicketsLost(String wicketsLost) {
+        this.wicketsLost = wicketsLost;
+    }
     String currentOver;
 
     public void setBowlerRunsGiven(String bowlerRunsGiven) {
@@ -74,6 +77,7 @@ public class ScoreCard {
     public void setBallsRemaining(String ballsRemaining) {
         this.ballsRemaining = ballsRemaining;
     }
+
     @Override
     public String toString()
     {   System.out.println(String.format("Over: %s/20 " + " BallOutCome: %s ",currentOver, currentBallScore));
@@ -82,7 +86,7 @@ public class ScoreCard {
         System.out.println(String.format("Bowler: %s  Runs /  Balls : %s / %s   WicketsTaken : %s",bowlerName,bowlerRunsGiven,ballsBowled,wicketsTaken));
         System.out.println(String.format("Batsman: %s"+ "  Runs / Balls: %s / %s",batsmanName,batsmanScore,ballsFaced));
         System.out.println(
-                String.format("Batting Team: %s "+ " Batting Team score: %s",battingTeam,battingTeamScore));
+                String.format("Batting Team: %s "+ " Batting Team score: %s + wicketsLost %s",battingTeam,battingTeamScore,wicketsLost));
         return " ";
     }
     String ballsRemaining;

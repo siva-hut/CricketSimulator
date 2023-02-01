@@ -1,41 +1,36 @@
-package com.CircketSimu.App.CricketGame;
+package com.circketApplication.cricketGame;
 
+import com.circketApplication.cricketGame.player.Batsman;
+import com.circketApplication.cricketGame.player.Bowler;
+import com.circketApplication.cricketGame.player.Player;
+import com.circketApplication.cricketGame.util.RandomGenerator;
 import com.github.javafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Team {
     private Vector<Player> players;
     private String teamName;
-    private int score;
-    private int wicketsLost;
-    private int bowlerIndex;
-    public Team(String teamName, String [] playerNames) {
-        this.teamName = teamName;
-        createTeamPlayers(playerNames);
-    }
-    public Team(String teamName)
-    {
-        Faker faker = new Faker();
-        String [] fakeNames = new String [11];
-        for(int i=0;i<11;i++)
-        {
-            fakeNames[i] = faker.name().name();
-        }
-        createTeamPlayers(fakeNames);
-    }
-    void createTeamPlayers(String [] playerNames)
-    {   bowlerIndex = RandomGenerator.random.nextInt(4,9);
+    private int score = 0;
+    private int wicketsLost = 0;
+    private int bowlerIndex = 8;
+    void createTeamPlayers(ArrayList<String> playerNames, int numberOfBatsman)
+    {   Faker faker = new Faker();
         players = new Vector<>(11);
+        while (playerNames.size()<11)
+        {
+            playerNames.add(faker.name().name());
+        }
         for (int i=0;i<11;i++)
-        {   //Need changes
-            if(i<bowlerIndex)
-            players.add(i, new Batsman(playerNames[i]));
+        {   if(i<numberOfBatsman)
+            {
+                players.add(i, new Batsman(playerNames.get(i)));
+            }
             else
-            players.add(i, new Bowler(playerNames[i]));
+            {
+                players.add(i, new Bowler(playerNames.get(i)));
+            }
         }
     }
     public int getScore() {
@@ -74,7 +69,7 @@ public class Team {
         score+=run;
     }
     public Player getBowler()
-    {  // System.out.println(bowlerIndex);
+    {
         return players.get(bowlerIndex);
     }
     public void changeBowler()
