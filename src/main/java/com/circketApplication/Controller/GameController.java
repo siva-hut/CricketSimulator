@@ -18,12 +18,6 @@ public class GameController {
             Game game = itr.next();
             System.out.println(game.simulateNextBall().toString());
             if(game.isGameOver()) {
-               /* if (game.getWinner() == null)
-                    System.out.println("Draw");
-                else
-                    System.out.println("Winner " + game.getWinner().getTeamName());
-                activeGamesId.remove(game.getGameId());*/
-
                 itr.remove();
             }
 
@@ -34,4 +28,4 @@ public class GameController {
         activeGameArray.add(game);
     }
 }
-// Game result printing
+// Game result printing left to do

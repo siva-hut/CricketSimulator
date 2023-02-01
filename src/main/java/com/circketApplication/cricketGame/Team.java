@@ -36,19 +36,9 @@ public class Team {
     public int getScore() {
         return score;
     }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public int getWicketsLost() {
         return wicketsLost;
     }
-
-    public void setWicketsLost(int wicketsLost) {
-        this.wicketsLost = wicketsLost;
-    }
-
     public String getTeamName() {
         return teamName;
     }

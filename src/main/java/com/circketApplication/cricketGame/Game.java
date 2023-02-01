@@ -9,8 +9,8 @@ import java.util.UUID;
 
 public class Game {
     //Instance variables
-    private UUID gameId = UUID.randomUUID();
-    private LocalTime startTime = LocalTime.now();
+    private final UUID gameId = UUID.randomUUID();
+    private final LocalTime startTime = LocalTime.now();
     private Team battingTeam;
 
     private Team bowlingTeam;
@@ -84,7 +84,7 @@ public class Game {
         {
             runSimulation(run);
         }
-        if(noBall == false && run!= 'W' ) {
+        if(!noBall && run!= 'W' ) {
             getBowler().oversBowled.nextBall();
             getOvers().nextBall();
             if (overs.overCompleted()) {
@@ -126,7 +126,7 @@ public class Game {
         }
         else if(getInnings() == 2)
         {
-            Boolean condition2 = getBattingTeam().getScore()>getBowlingTeam().getScore();;
+            Boolean condition2 = getBattingTeam().getScore()>getBowlingTeam().getScore();
             if(condition1 || condition2)
                 gameOver=true;
         }
