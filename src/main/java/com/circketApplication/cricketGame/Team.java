@@ -11,12 +11,15 @@ import java.util.Vector;
 
 public class Team {
     private Vector<Player> players;
+    private Player batsmanOnStrike;
+    private Player batsmanOffStrike;
     private String teamName;
     private int score = 0;
     private int wicketsLost = 0;
     private int bowlerIndex = 8;
     void createTeamPlayers(ArrayList<String> playerNames, int numberOfBatsman)
-    {   Faker faker = new Faker();
+    {
+        Faker faker = new Faker();
         players = new Vector<>(11);
         while (playerNames.size()<11)
         {
@@ -32,6 +35,8 @@ public class Team {
                 players.add(i, new Bowler(playerNames.get(i)));
             }
         }
+        batsmanOnStrike = players.get(0);
+        batsmanOffStrike = players.get(1);
     }
     public int getScore() {
         return score;
@@ -45,9 +50,31 @@ public class Team {
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
-    public Player getBatsman()
+    public Player getBatsmanOnStrike()
     {
-        return players.get(wicketsLost);
+        return batsmanOnStrike;
+    }
+    public Player getBatsmanOffStrike()
+    {
+        return batsmanOffStrike;
+    }
+    public void changeStrike()
+    {   Player duplicate = batsmanOnStrike;
+        batsmanOnStrike = batsmanOffStrike;
+        batsmanOffStrike = duplicate;
+    }
+    public void nextBatsman()
+    {
+        int index = players.indexOf(batsmanOnStrike)+1;
+        while(index<11)
+        {
+            if(players.get(index)!=batsmanOffStrike)
+            {
+                batsmanOnStrike = players.get(index);
+                break;
+            }
+            index++;
+        }
     }
     public void increaseWicketLost()
     {

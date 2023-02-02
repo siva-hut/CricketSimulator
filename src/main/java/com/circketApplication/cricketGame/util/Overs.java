@@ -10,6 +10,16 @@ public class Overs {
         this.decimal=0;
         this.totalOvers = totalOvers;
     }
+    public void reBall()
+    {
+        if(decimal == 0)
+        {
+            number--;
+            decimal = 5;
+        }
+        else
+            decimal--;
+    }
     public String getOvers()
     {
         return String.format("%d.%d",number,decimal);

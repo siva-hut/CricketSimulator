@@ -31,19 +31,8 @@ public class Game {
     public Team getBattingTeam() {
         return battingTeam;
     }
-
-    public Player getBatsman()
-    {
-        return battingTeam.getBatsman();
-    }
-
     public Team getBowlingTeam() {
         return bowlingTeam;
-    }
-
-    public Player getBowler()
-    {
-        return bowlingTeam.getBowler();
     }
     private int getInnings() {
         return innings;
@@ -70,32 +59,31 @@ public class Game {
     }
 
     public ScoreCard simulateNextBall()
-    {
-        run = getBatsman().simulateRun(noBall);
+    {   bowlingTeam.getBowler().oversBowled.nextBall();
+        overs.nextBall();
+        run = battingTeam.getBatsmanOnStrike().simulateRun(noBall);
         noBall = false;
+        scoreCard.updateScoreCard(this);
+        System.out.println(scoreCard);
         if(run == 'w'){
             simulateWicket();
         }
-        else if(run == 'W') // Wide
-        {
+        else if(run == 'W'){
             wideSimulation();
+            overs.reBall();
         }
-        else if(run == 'N')
-        {
+        else if(run == 'N') {
             noBall = true;
+            overs.reBall();
         }
-        else
-        {
+        else {
             runSimulation(run);
         }
-        if(!noBall && run!= 'W' ) {
-            getBowler().oversBowled.nextBall();
-            getOvers().nextBall();
-            if (overs.overCompleted()) {
-                getBowlingTeam().changeBowler();
-            }
-            checkGameStatus();
+        if (overs.overCompleted()) {
+            bowlingTeam.changeBowler();
+            battingTeam.changeStrike();
         }
+        checkGameStatus();
         scoreCard.updateScoreCard(this);
         return scoreCard;
     }
@@ -108,19 +96,25 @@ public class Game {
     }
     private void simulateWicket()
     {
-        getBowler().wicketTaken();
+        bowlingTeam.getBowler().wicketTaken();
         getBattingTeam().increaseWicketLost();
+        battingTeam.nextBatsman();
     }
     private void runSimulation(char run)
     {
         int nRun = run-'0' ;
-        getBatsman().updateRun(nRun);
-        getBowler().addRunsGiven(nRun);
-        getBattingTeam().increaseScore(nRun);
+        battingTeam.getBatsmanOnStrike().updateRun(nRun);
+        bowlingTeam.getBowler().addRunsGiven(nRun);
+        battingTeam.increaseScore(nRun);
+        if(nRun%2 == 1)
+        {
+            battingTeam.changeStrike();
+        }
+
     }
     private void wideSimulation()
     {
-        getBowler().addRunsGiven(1);
+        bowlingTeam.getBowler().addRunsGiven(1);
         getBattingTeam().increaseScore(1);
     }
     private void checkGameStatus()
