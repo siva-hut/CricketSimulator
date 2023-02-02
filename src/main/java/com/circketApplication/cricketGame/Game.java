@@ -83,8 +83,8 @@ public class Game {
             bowlingTeam.changeBowler();
             battingTeam.changeStrike();
         }
-        checkGameStatus();
         scoreCard.updateScoreCard(this);
+        checkGameStatus();
         return scoreCard;
     }
     private void switchSides()

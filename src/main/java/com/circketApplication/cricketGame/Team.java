@@ -3,13 +3,16 @@ package com.circketApplication.cricketGame;
 import com.circketApplication.cricketGame.player.Batsman;
 import com.circketApplication.cricketGame.player.Bowler;
 import com.circketApplication.cricketGame.player.Player;
+import com.circketApplication.cricketGame.player.PlayerFactory;
 import com.circketApplication.cricketGame.util.RandomGenerator;
 import com.github.javafaker.Faker;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class Team {
+    private boolean[] notDoneBatting = new boolean[11];
     private Vector<Player> players;
     private Player batsmanOnStrike;
     private Player batsmanOffStrike;
@@ -28,14 +31,16 @@ public class Team {
         for (int i=0;i<11;i++)
         {   if(i<numberOfBatsman)
             {
-                players.add(i, new Batsman(playerNames.get(i)));
+                players.add(i, PlayerFactory.getBatsman(playerNames.get(i)));
             }
             else
             {
-                players.add(i, new Bowler(playerNames.get(i)));
+                players.add(i, PlayerFactory.getBowler(playerNames.get(i)));
             }
         }
         batsmanOnStrike = players.get(0);
+        notDoneBatting[0] = true;
+        notDoneBatting[1] = true;
         batsmanOffStrike = players.get(1);
     }
     public int getScore() {
@@ -66,14 +71,19 @@ public class Team {
     public void nextBatsman()
     {
         int index = players.indexOf(batsmanOnStrike)+1;
-        while(index<11)
+        while(index<notDoneBatting.length)
         {
-            if(players.get(index)!=batsmanOffStrike)
+            if(!notDoneBatting[index])
             {
                 batsmanOnStrike = players.get(index);
+                notDoneBatting[index] = true;
                 break;
             }
             index++;
+        }
+        if(index == 11)
+        {
+            batsmanOnStrike =  PlayerFactory.getBowler("NULL");
         }
     }
     public void increaseWicketLost()
