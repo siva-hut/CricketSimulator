@@ -8,41 +8,40 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public class Game {
-    //Instance variables
+    private char run;
     private final UUID gameId = UUID.randomUUID();
     private final LocalTime startTime = LocalTime.now();
     private Team battingTeam;
-
     private Team bowlingTeam;
     private Overs overs;
     private int innings = 1;
     private boolean gameOver = false;
     boolean noBall = false;
+    private ScoreCard scoreCard = new ScoreCard();
     //Getters
-    private Overs getOvers() {
+    public Overs getOvers() {
         return overs;
     }
-
     private UUID getGameId() {
         return gameId;
     }
     private LocalTime getStartTime() {
         return startTime;
     }
-    private Team getBattingTeam() {
+    public Team getBattingTeam() {
         return battingTeam;
     }
 
-    private Player getBatsman()
+    public Player getBatsman()
     {
         return battingTeam.getBatsman();
     }
 
-    private Team getBowlingTeam() {
+    public Team getBowlingTeam() {
         return bowlingTeam;
     }
 
-    private Player getBowler()
+    public Player getBowler()
     {
         return bowlingTeam.getBowler();
     }
@@ -65,9 +64,14 @@ public class Game {
     public boolean isGameOver() {
         return gameOver;
     }
+
+    public char getRun() {
+        return run;
+    }
+
     public ScoreCard simulateNextBall()
     {
-        char run = getBatsman().simulateRun(noBall);
+        run = getBatsman().simulateRun(noBall);
         noBall = false;
         if(run == 'w'){
             simulateWicket();
@@ -92,7 +96,8 @@ public class Game {
             }
             checkGameStatus();
         }
-        return createScoreCard(run);
+        scoreCard.updateScoreCard(this);
+        return scoreCard;
     }
     private void switchSides()
     {   innings++;
@@ -130,26 +135,5 @@ public class Game {
             if(condition1 || condition2)
                 gameOver=true;
         }
-    }
-    private ScoreCard createScoreCard(char run)
-    {
-        ScoreCard scoreCard = new ScoreCard();
-        scoreCard.setBatsmanScore(String.valueOf(getBatsman().getRunsScored()));
-        scoreCard.setBatsmanName(getBatsman().getPlayerName());
-        scoreCard.setCurrentBallScore(String.valueOf(run));
-        scoreCard.setBallsRemaining(String.valueOf(overs.ballsRemaining()));
-        scoreCard.setBowlerName(getBowlingTeam().getBowler().getPlayerName());
-        scoreCard.setWicketsTaken(String.valueOf(getBowlingTeam().getBowler().getWicketsTaken()));
-        scoreCard.setBallsFaced(String.valueOf(getBatsman().getBallsFaced()));
-        scoreCard.setBattingTeamScore(String.valueOf(getBattingTeam().getScore()));
-        scoreCard.setBatsmanScore(String.valueOf(getBatsman().getRunsScored()));
-        scoreCard.setBowlerRunsGiven(String.valueOf(getBowlingTeam().getBowler().getRunsGiven()));
-        scoreCard.setWicketsTaken(String.valueOf(getBowlingTeam().getBowler().getWicketsTaken()));
-        scoreCard.setBallsBowled(String.valueOf(getBowlingTeam().getBowler().oversBowled.getOvers()));
-        scoreCard.setBowlingTeamScore(String.valueOf(getBowlingTeam().getScore()));
-        scoreCard.setBowlingTeam(getBowlingTeam().getTeamName());
-        scoreCard.setWicketsLost(String.valueOf(getBattingTeam().getWicketsLost()));
-        scoreCard.setCurrentOver(overs.getOvers());
-        return scoreCard;
     }
 }

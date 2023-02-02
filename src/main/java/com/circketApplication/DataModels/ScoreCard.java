@@ -1,9 +1,10 @@
 package com.circketApplication.DataModels;
 
+import com.circketApplication.cricketGame.Game;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public class ScoreCard {
+    String ballsRemaining;
     String wicketsLost;
     String bowlerName;
     String wicketsTaken;
@@ -15,69 +16,8 @@ public class ScoreCard {
     String bowlingTeamScore;
     String ballsFaced;
     String bowlerRunsGiven,ballsBowled;
-
-    String bowlingTeam;
-
-    public void setBowlingTeam(String bowlingTeam) {
-        this.bowlingTeam = bowlingTeam;
-    }
-
-    public void setCurrentOver(String currentOver) {
-        this.currentOver = currentOver;
-    }
-    public void setWicketsLost(String wicketsLost) {
-        this.wicketsLost = wicketsLost;
-    }
     String currentOver;
-
-    public void setBowlerRunsGiven(String bowlerRunsGiven) {
-        this.bowlerRunsGiven = bowlerRunsGiven;
-    }
-
-    public void setBallsBowled(String ballsBowled) {
-        this.ballsBowled = ballsBowled;
-    }
-
-    public void setBowlerName(String bowlerName) {
-        this.bowlerName = bowlerName;
-    }
-
-    public void setWicketsTaken(String wicketsTaken) {
-        this.wicketsTaken = wicketsTaken;
-    }
-
-    public void setBatsmanName(String batsmanName) {
-        this.batsmanName = batsmanName;
-    }
-
-    public void setBatsmanScore(String batsmanScore) {
-        this.batsmanScore = batsmanScore;
-    }
-
-    public void setBattingTeam(String battingTeam) {
-        this.battingTeam = battingTeam;
-    }
-
-    public void setBattingTeamScore(String battingTeamScore) {
-        this.battingTeamScore = battingTeamScore;
-    }
-
-    public void setBowlingTeamScore(String bowlingTeamScore) {
-        this.bowlingTeamScore = bowlingTeamScore;
-    }
-
-    public void setBallsFaced(String ballsFaced) {
-        this.ballsFaced = ballsFaced;
-    }
-
-    public void setCurrentBallScore(String currentBallScore) {
-        this.currentBallScore = currentBallScore;
-    }
-
-    public void setBallsRemaining(String ballsRemaining) {
-        this.ballsRemaining = ballsRemaining;
-    }
-
+    String bowlingTeam;
     @Override
     public String toString()
     {   System.out.println(String.format("Over: %s/20 " + " BallOutCome: %s ",currentOver, currentBallScore));
@@ -89,6 +29,44 @@ public class ScoreCard {
                 String.format("Batting Team: %s "+ " Batting Team score: %s + wicketsLost %s",battingTeam,battingTeamScore,wicketsLost));
         return " ";
     }
-    String ballsRemaining;
+    private void setBatsmanData(Game game)
+    {
+        batsmanScore   = String.valueOf(game.getBatsman().getRunsScored());
+        batsmanName    = game.getBatsman().getPlayerName();
+        ballsFaced     = String.valueOf(game.getBatsman().getBallsFaced());
+    }
+    private void setBowlerData(Game game)
+    {
+        bowlerName = game.getBowler().getPlayerName();
+        wicketsTaken = String.valueOf(game.getBowler().getWicketsTaken());
+        bowlerRunsGiven = String.valueOf(game.getBowler().getRunsGiven());
+        ballsBowled = String.valueOf(game.getBowler().oversBowled.getOvers());
 
+    }
+    private void setBattingTeamData(Game game)
+    {
+        battingTeam = game.getBattingTeam().getTeamName();
+        battingTeamScore = String.valueOf(game.getBattingTeam().getScore());
+        wicketsLost = String.valueOf(game.getBattingTeam().getWicketsLost());
+    }
+    private void setBowlingTeamData(Game game)
+    {
+        bowlingTeamScore  = String.valueOf(game.getBowlingTeam().getScore());
+        bowlingTeam = game.getBowlingTeam().getTeamName();
+    }
+    private void setGameData(Game game)
+    {
+        currentBallScore = String.valueOf(game.getRun());
+        ballsRemaining = String.valueOf(game.getOvers().ballsRemaining());
+        currentOver = game.getOvers().getOvers();
+
+    }
+    public void updateScoreCard(Game game)
+    {
+        setBatsmanData(game);
+        setBowlerData(game);
+        setBattingTeamData(game);
+        setBowlingTeamData(game);
+        setGameData(game);
+    }
 }

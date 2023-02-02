@@ -28,4 +28,3 @@ public class GameController {
         activeGameArray.add(game);
     }
 }
-// Game result printing left to do

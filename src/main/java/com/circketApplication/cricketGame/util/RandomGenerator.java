@@ -16,14 +16,14 @@ public class RandomGenerator {
     public static Random random = new Random();
     public static char generateOutCome(int index)
     {
-        char [] arr = {'w','3','4','5','6','0','1','2','N','W'};
+        char [] arr = {'w','3','4','5','6','1','0','0','1','2','N','W'};
         if(index<80)
         {
             return arr[random.nextInt(2)];
         }
-        if(index>600)
+        if(index>650)
         {
-            return arr[random.nextInt(2,7)];
+            return arr[random.nextInt(2,9)];
         }
         else
         {
