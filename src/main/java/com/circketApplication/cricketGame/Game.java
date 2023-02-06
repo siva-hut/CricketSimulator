@@ -70,14 +70,13 @@ public class Game {
         }
         else if(run == 'W'){
             wideSimulation();
-            overs.reBall();
         }
         else if(run == 'N') {
             noBall = true;
             overs.reBall();
         }
         else {
-            runSimulation(run);
+            runSimulation();
         }
         if (overs.overCompleted()) {
             bowlingTeam.changeBowler();
@@ -100,7 +99,7 @@ public class Game {
         getBattingTeam().increaseWicketLost();
         battingTeam.nextBatsman();
     }
-    private void runSimulation(char run)
+    private void runSimulation()
     {
         int nRun = run-'0' ;
         battingTeam.getBatsmanOnStrike().updateRun(nRun);
@@ -110,12 +109,12 @@ public class Game {
         {
             battingTeam.changeStrike();
         }
-
     }
     private void wideSimulation()
     {
         bowlingTeam.getBowler().addRunsGiven(1);
         getBattingTeam().increaseScore(1);
+        overs.reBall();
     }
     private void checkGameStatus()
     {   Boolean condition1 = getOvers().ballsRemaining() == 0 || getBattingTeam().getWicketsLost()==10;

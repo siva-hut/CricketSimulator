@@ -40,8 +40,8 @@ public class Team {
         }
         batsmanOnStrike = players.get(0);
         notDoneBatting[0] = true;
-        notDoneBatting[1] = true;
         batsmanOffStrike = players.get(1);
+        notDoneBatting[1] = true;
     }
     public int getScore() {
         return score;

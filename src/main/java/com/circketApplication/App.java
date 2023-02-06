@@ -12,13 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class App {
 
 	public static void main(String[] args) {
-		SpringApplication.run(App.class, args);
-	/*	for (String s:ap.getBeanDefinitionNames()) {
-			System.out.println(s);
-		}
-		Game g = ap.getBean(Game.class);
-		System.out.println(g.team1.name);
-	*/
 		Game g =new GameBuilder().getGame();
 		GameController.addGame(g);
 	}

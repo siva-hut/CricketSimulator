@@ -12,7 +12,9 @@ public class Batsman extends Player {
     public char simulateRun(boolean noBall)
     {
         if (noBall)
+        {
             return RandomGenerator.generateNoBallOutCome();
+        }
         int randomNumber = RandomGenerator.random.nextInt(1000);
         return RandomGenerator.generateOutCome(randomNumber);
     }
