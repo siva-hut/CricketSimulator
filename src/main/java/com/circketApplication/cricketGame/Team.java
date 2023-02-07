@@ -83,7 +83,7 @@ public class Team {
         }
         if(index == 11)
         {
-            batsmanOnStrike =  PlayerFactory.getBowler("NULL");
+            batsmanOnStrike =  PlayerFactory.getNullPlayer();
         }
     }
     public void increaseWicketLost()

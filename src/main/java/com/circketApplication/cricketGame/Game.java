@@ -65,18 +65,19 @@ public class Game {
         noBall = false;
         scoreCard.updateScoreCard(this);
         System.out.println(scoreCard);
-        if(run == 'w'){
-            simulateWicket();
-        }
-        else if(run == 'W'){
-            wideSimulation();
-        }
-        else if(run == 'N') {
-            noBall = true;
-            overs.reBall();
-        }
-        else {
-            runSimulation();
+        switch(run) {
+            case 'w':
+                simulateWicket();
+                break;
+            case 'W':
+                wideSimulation();
+                break;
+            case 'N':
+                noBall = true;
+                overs.reBall();
+                break;
+            default:
+                runSimulation();
         }
         if (overs.overCompleted()) {
             bowlingTeam.changeBowler();

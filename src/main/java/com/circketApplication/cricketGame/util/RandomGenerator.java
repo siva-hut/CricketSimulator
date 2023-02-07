@@ -18,17 +18,12 @@ public class RandomGenerator {
     {
         char [] arr = {'w','3','4','5','6','1','0','0','1','2','N','W'};
         if(index<80)
-        {
-            return arr[random.nextInt(2)];
-        }
+        return arr[random.nextInt(2)];
+
         if(index>650)
-        {
-            return arr[random.nextInt(2,9)];
-        }
-        else
-        {
-            return arr[random.nextInt(arr.length)];
-        }
+        return arr[random.nextInt(2,9)];
+
+        return arr[random.nextInt(arr.length)];
     }
     public static char generateNoBallOutCome()
     {
