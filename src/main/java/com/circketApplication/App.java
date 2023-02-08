@@ -1,10 +1,12 @@
 package com.circketApplication;
-
-import com.circketApplication.cricketGame.Game;
-import com.circketApplication.Controller.GameController;
-import com.circketApplication.cricketGame.GameBuilder;
+import com.circketApplication.service.TeamDb;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
@@ -12,8 +14,26 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class App {
 
 	public static void main(String[] args) {
-		Game g =new GameBuilder().getGame();
-		GameController.addGame(g);
+		ConfigurableApplicationContext ap =SpringApplication.run(App.class,args);
+		Configuration con = new Configuration().configure().addAnnotatedClass(TeamDb.class);
+		SessionFactory sf = con.buildSessionFactory();
+		EntityManager em = sf.openSession();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			TeamDb p = new TeamDb();
+			p.setName("ssk");
+			em.persist(p);
+			System.out.println("1");
+			em.flush();
+			System.out.println("1");
+			tx.commit();
+		} catch (Exception exp) {
+			tx.rollback();
+		}
+		em.close();
+		sf.close();
+//		GameController.addGame(g);
 	}
 
 }

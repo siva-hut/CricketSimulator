@@ -10,6 +10,7 @@ import java.util.Iterator;
 @Service
 public class GameController {
     public static ArrayList<Game> activeGameArray = new ArrayList<Game>();
+    /*
     @Scheduled(fixedRate=200)
     public static void runGame()
     {
@@ -26,5 +27,5 @@ public class GameController {
     public static void addGame(Game game)
     {
         activeGameArray.add(game);
-    }
+    }*/
 }
