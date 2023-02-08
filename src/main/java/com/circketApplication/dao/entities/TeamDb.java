@@ -1,4 +1,4 @@
-package com.circketApplication.service;
+package com.circketApplication.dao.entities;
 
 import jakarta.persistence.*;
 
@@ -12,6 +12,7 @@ public class TeamDb {
     private String name;
     private int gamesWon;
     private int gamesLost;
+    private int gamesDrew;
 
     public String getName() {
         return name;
@@ -45,7 +46,6 @@ public class TeamDb {
         this.gamesDrew = gamesDrew;
     }
 
-    private int gamesDrew;
     public Long getId() {
         return id;
     }

@@ -1,4 +1,4 @@
-package com.circketApplication.DataModels;
+package com.circketApplication.cricketGame.dataModels;
 
 import com.circketApplication.cricketGame.Game;
 

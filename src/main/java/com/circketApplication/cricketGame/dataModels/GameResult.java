@@ -1,4 +1,4 @@
-package com.circketApplication.DataModels;
+package com.circketApplication.cricketGame.dataModels;
 
 public class GameResult {
     String winningTeam;

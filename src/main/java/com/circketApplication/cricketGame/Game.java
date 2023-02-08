@@ -1,7 +1,6 @@
 package com.circketApplication.cricketGame;
 
-import com.circketApplication.DataModels.ScoreCard;
-import com.circketApplication.cricketGame.player.Player;
+import com.circketApplication.cricketGame.dataModels.ScoreCard;
 import com.circketApplication.cricketGame.util.Overs;
 
 import java.time.LocalTime;
@@ -9,7 +8,6 @@ import java.util.UUID;
 
 public class Game {
     private char run;
-    private final UUID gameId = UUID.randomUUID();
     private final LocalTime startTime = LocalTime.now();
     private Team battingTeam;
     private Team bowlingTeam;
@@ -21,9 +19,6 @@ public class Game {
     //Getters
     public Overs getOvers() {
         return overs;
-    }
-    private UUID getGameId() {
-        return gameId;
     }
     private LocalTime getStartTime() {
         return startTime;
