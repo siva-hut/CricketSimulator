@@ -1,92 +1,74 @@
 package com.circketApplication.cricketGame;
-
-import com.circketApplication.cricketGame.dataModels.ScoreCard;
 import com.circketApplication.cricketGame.util.Overs;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.LocalTime;
-import java.util.UUID;
-
+@Getter
+@ToString
+@Setter
 public class Game {
+    private Long id;
     private char run;
-    private final LocalTime startTime = LocalTime.now();
     private Team battingTeam;
     private Team bowlingTeam;
     private Overs overs;
     private int innings = 1;
+    private GameProperties gameProperties = new GameProperties();
     private boolean gameOver = false;
-    boolean noBall = false;
-    private ScoreCard scoreCard = new ScoreCard();
-    //Getters
-    public Overs getOvers() {
-        return overs;
-    }
-    private LocalTime getStartTime() {
-        return startTime;
-    }
-    public Team getBattingTeam() {
-        return battingTeam;
-    }
-    public Team getBowlingTeam() {
-        return bowlingTeam;
-    }
-    private int getInnings() {
-        return innings;
-    }
-    //Setters
-    public void setBattingTeam(Team battingTeam) {
-        this.battingTeam = battingTeam;
-    }
+    public void simulateNextBall()
+    {
+        perpareGame();
+        run = battingTeam.getBatsmanOnStrike().simulateRun(gameProperties.noBall);
+        gameProperties.noBall = false;
 
-    public void setBowlingTeam(Team bowlingTeam) {
-        this.bowlingTeam = bowlingTeam;
-    }
+        switch (run) {
+            case 'w':
+                gameProperties.setWicketSimulation(true);
+                break;
+            case 'W':
+                wideSimulation();
+                break;
+            case 'N':
+                gameProperties.setNoBall(true);
+                overs.reBall();
+                break;
+            default:
+                runSimulation();
+        }
 
-    public void setOvers(Overs overs) {
-        this.overs = overs;
-    }
-    //Utility
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public char getRun() {
-        return run;
-    }
-
-    public ScoreCard simulateNextBall()
-    {   bowlingTeam.getBowler().oversBowled.nextBall();
-        overs.nextBall();
-        run = battingTeam.getBatsmanOnStrike().simulateRun(noBall);
-        noBall = false;
-        scoreCard.updateScoreCard(this);
-        System.out.println(scoreCard);
-        if(run == 'w'){
-            simulateWicket();
-        }
-        else if(run == 'W'){
-            wideSimulation();
-        }
-        else if(run == 'N') {
-            noBall = true;
-            overs.reBall();
-        }
-        else {
-            runSimulation();
-        }
         if (overs.overCompleted()) {
             bowlingTeam.changeBowler();
+        }
+        checkGameStatus();
+    }
+    private  void perpareGame()
+    {
+        if(gameProperties.isSwitchSides()) {
+            switchSides();
+        }
+        if(gameProperties.isWicketSimulation()) {
+            simulateWicket();
+            gameProperties.setWicketSimulation(false);
+        }
+        if(gameProperties.isChangeStrike()) {
+            battingTeam.changeStrike();
+            gameProperties.setChangeStrike(false);
+        }
+        if (overs.overCompleted()) {
             battingTeam.changeStrike();
         }
-        scoreCard.updateScoreCard(this);
-        checkGameStatus();
-        return scoreCard;
+        bowlingTeam.getBowler().oversBowled.nextBall();
+        overs.nextBall();
     }
     private void switchSides()
-    {   innings++;
+    {   gameProperties = new GameProperties();
+        innings++;
+        battingTeam.setBattingOvers(overs);
         Team duplicate = battingTeam;
         battingTeam = bowlingTeam;
         bowlingTeam = duplicate;
-        overs.reset();
+        overs = new Overs(overs.getTotalOvers());
     }
     private void simulateWicket()
     {
@@ -102,7 +84,7 @@ public class Game {
         battingTeam.increaseScore(nRun);
         if(nRun%2 == 1)
         {
-            battingTeam.changeStrike();
+            gameProperties.setChangeStrike(true);
         }
     }
     private void wideSimulation()
@@ -115,13 +97,23 @@ public class Game {
     {   Boolean condition1 = getOvers().ballsRemaining() == 0 || getBattingTeam().getWicketsLost()==10;
         if(getInnings() == 1 && condition1)
         {
-            switchSides();
+            gameProperties.setSwitchSides(true);
         }
         else if(getInnings() == 2)
         {
             Boolean condition2 = getBattingTeam().getScore()>getBowlingTeam().getScore();
             if(condition1 || condition2)
-                gameOver=true;
+            {   battingTeam.setBattingOvers(overs);
+                gameOver = true;
+            }
         }
     }
+}
+@Setter
+@Getter
+class GameProperties{
+    private boolean switchSides = false;
+    private boolean wicketSimulation = false;
+    private boolean changeStrike = false;
+    boolean noBall = false;
 }

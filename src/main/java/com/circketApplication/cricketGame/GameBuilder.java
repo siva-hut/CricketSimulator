@@ -44,19 +44,23 @@ public class GameBuilder {
     {
         Team team = new Team();
         team.setTeamName(team1Name);
-        team.createTeamPlayers(team1PlayerNames,team1NumberOfBatsman);
+//        team.createTeamPlayers(team1PlayerNames,team1NumberOfBatsman);
         return team;
     }
     private Team buildTeam2()
     {
         Team team = new Team();
         team.setTeamName(team2Name);
-        team.createTeamPlayers(team2PlayerNames,team2NumberOfBatsman);
+//        team.createTeamPlayers(team2PlayerNames,team2NumberOfBatsman);
         return team;
     }
     public Game getGame()
     {
         Game game = new Game();
+        if(team1Name==null)
+            team1Name = "KKK";
+        if(team2Name==null)
+            team2Name = "MMM";
         game.setBattingTeam(buildTeam1());
         game.setBowlingTeam(buildTeam2());
         game.setOvers(new Overs(totalOvers));

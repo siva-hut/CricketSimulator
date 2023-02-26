@@ -12,7 +12,13 @@ public class RandomGenerator {
         }
         return randomGenerator;
     }
-
+    public String getRandomPlayer()
+    {
+        int number = random.nextInt(2);
+        if(number==1)
+            return "Batsman";
+        return "Bowler";
+    }
     public static Random random = new Random();
     public static char generateOutCome(int index)
     {

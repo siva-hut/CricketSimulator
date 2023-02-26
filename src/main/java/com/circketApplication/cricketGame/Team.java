@@ -1,25 +1,32 @@
 package com.circketApplication.cricketGame;
 
-import com.circketApplication.cricketGame.player.Batsman;
-import com.circketApplication.cricketGame.player.Bowler;
 import com.circketApplication.cricketGame.player.Player;
 import com.circketApplication.cricketGame.player.PlayerFactory;
+import com.circketApplication.cricketGame.util.Overs;
 import com.circketApplication.cricketGame.util.RandomGenerator;
+import com.circketApplication.dao.entities.PlayerDao;
 import com.github.javafaker.Faker;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
-
+@Getter
+@Setter
 public class Team {
+    private Long id;
     private boolean[] notDoneBatting = new boolean[11];
     private Vector<Player> players;
     private Player batsmanOnStrike;
     private Player batsmanOffStrike;
     private String teamName;
     private int score = 0;
+
     private int wicketsLost = 0;
     private int bowlerIndex = 8;
+    private Overs battingOvers;
     void createTeamPlayers(ArrayList<String> playerNames, int numberOfBatsman)
     {
         Faker faker = new Faker();
@@ -37,6 +44,50 @@ public class Team {
             {
                 players.add(i, PlayerFactory.getBowler(playerNames.get(i)));
             }
+        }
+        batsmanOnStrike = players.get(0);
+        notDoneBatting[0] = true;
+        batsmanOffStrike = players.get(1);
+        notDoneBatting[1] = true;
+    }
+    public void createTeamPlayers(List<PlayerDao> playerDaos)
+    {
+        Faker faker = new Faker();
+        players = new Vector<>(11);
+        if(playerDaos==null)
+            playerDaos = new ArrayList<>();
+        while (playerDaos.size()<11) {
+            playerDaos.add(PlayerDao.builder().
+                    name(faker.name().name()).
+                    teamName(teamName).playerType(RandomGenerator.
+                            getRandomGenerator().
+                            getRandomPlayer()).build());
+
+        }
+        for (int i=0;i<11;i++) {
+            PlayerDao playerDao = playerDaos.get(i);
+            Player player;
+            if(playerDao.getPlayerType()==null)
+            {
+                int random = new Random().nextInt(2);
+                if(random==1)
+                    playerDao.setPlayerType("Bowler");
+                else
+                    playerDao.setPlayerType("Batsman");
+            }
+            if(playerDao.getPlayerType().equals("Bowler")) {
+                player = PlayerFactory.getBowler(playerDao.getName());
+            }
+            else{
+                player = PlayerFactory.getBatsman(playerDao.getName());
+            }
+            player.setId(playerDao.getId());
+//            player.setBallsFaced(playerDao.getBallsFaced());
+//            player.setOversBowled(new Overs(0,playerDao.getBallsBowled()));
+//            player.setRunsScored(playerDao.getRunsScored());
+//            player.setWicketsTaken(playerDao.getWicketsTaken());
+//            player.setRunsGiven(playerDao.getRunsGiven());
+            players.add(player);
         }
         batsmanOnStrike = players.get(0);
         notDoneBatting[0] = true;
@@ -64,7 +115,8 @@ public class Team {
         return batsmanOffStrike;
     }
     public void changeStrike()
-    {   Player duplicate = batsmanOnStrike;
+    {
+        Player duplicate = batsmanOnStrike;
         batsmanOnStrike = batsmanOffStrike;
         batsmanOffStrike = duplicate;
     }
@@ -80,10 +132,6 @@ public class Team {
                 break;
             }
             index++;
-        }
-        if(index == 11)
-        {
-            batsmanOnStrike =  PlayerFactory.getBowler("NULL");
         }
     }
     public void increaseWicketLost()
@@ -102,4 +150,5 @@ public class Team {
     {
         bowlerIndex = RandomGenerator.random.nextInt(4,11);
     }
+
 }

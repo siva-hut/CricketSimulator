@@ -1,31 +1,34 @@
 package com.circketApplication.Controller;
 
-import com.circketApplication.cricketGame.Game;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import com.circketApplication.dataModels.response.GameDetailResponse;
+import com.circketApplication.dataModels.response.GetAllGameResponse;
+import com.circketApplication.service.GameService;
+import com.circketApplication.service.impl.GameDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-@Service
+@RestController
+@RequestMapping("/api")
 public class GameController {
-    public static ArrayList<Game> activeGameArray = new ArrayList<Game>();
-    /*
-    @Scheduled(fixedRate=200)
-    public static void runGame()
-    {
-        Iterator<Game> itr= activeGameArray.iterator();
-        while(itr.hasNext()){
-            Game game = itr.next();
-            System.out.println(game.simulateNextBall().toString());
-            if(game.isGameOver()) {
-                itr.remove();
-            }
-
-        }
+    @Autowired
+    private GameDetailService gameDetailService;
+    @Autowired
+    private GameService gameService;
+    @GetMapping("/getAllGames")
+    public GetAllGameResponse getAllGames() {
+        return gameDetailService.getAllGames();
     }
-    public static void addGame(Game game)
-    {
-        activeGameArray.add(game);
-    }*/
+    @GetMapping("/getAllActiveGames")
+    public GetAllGameResponse getAllActiveGames() {
+        return gameDetailService.getAllActiveGames();
+    }
+    @GetMapping("/getGameDetails")
+    public GameDetailResponse getMatchDetails(@RequestParam Long gameId) {
+        return gameDetailService.getGameDetails(gameId);
+    }
+    @PostMapping("/pauseGame")
+    public void pauseGame(@RequestParam Long gameId){
+        System.out.println("TF");
+        gameService.pauseGame(gameId);
+    }
 }

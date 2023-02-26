@@ -19,4 +19,8 @@ public class Batsman extends Player {
         return RandomGenerator.generateOutCome(randomNumber);
     }
 
+    @Override
+    public String playerType() {
+        return "Batsman";
+    }
 }

@@ -13,4 +13,9 @@ public class Bowler extends Player {
         int randomNumber = RandomGenerator.random.nextInt(700);
         return RandomGenerator.generateOutCome(randomNumber);
     }
+
+    @Override
+    public String playerType() {
+        return "Bowler";
+    }
 }

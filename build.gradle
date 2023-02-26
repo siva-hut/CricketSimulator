@@ -29,6 +29,9 @@ dependencies {
 	implementation 'org.hibernate:hibernate-core:6.2.0.CR2'
 	// https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager
 	implementation 'org.hibernate:hibernate-entitymanager:6.0.0.Alpha7'
+	// https://mvnrepository.com/artifact/org.projectlombok/lombok
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
 }
 

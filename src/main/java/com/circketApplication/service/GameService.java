@@ -1,9 +1,11 @@
 package com.circketApplication.service;
 
+import com.circketApplication.cricketGame.Game;
+import com.circketApplication.cricketGame.GameBuilder;
+
 public interface GameService {
-    void createGame();
+    Long createGame(GameBuilder gameBuilder);
     void simulateNextBall();
-    //Create Game
-    //NextBall ScoreCard
-    //
+    void addGame(Game game);
+    void pauseGame(Long gameId);
 }

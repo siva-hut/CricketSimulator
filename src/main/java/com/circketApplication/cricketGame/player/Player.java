@@ -1,10 +1,24 @@
 package com.circketApplication.cricketGame.player;
 
 import com.circketApplication.cricketGame.util.Overs;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public abstract class Player {
+    private Long id;
     public Overs oversBowled = new Overs(0);
     private int runsGiven = 0;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private int wicketsTaken = 0;
     public int getRunsGiven() {
         return runsGiven;
@@ -43,4 +57,5 @@ public abstract class Player {
         runsScored+=run;
         ballsFaced++;
     }
+    public abstract String playerType();
 }
