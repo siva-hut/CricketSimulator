@@ -16,9 +16,11 @@ public class Game {
     private int innings = 1;
     private GameProperties gameProperties = new GameProperties();
     private boolean gameOver = false;
-    public void simulateNextBall()
+    public void simulateNextBall(char value)
     {
+        run = value;
         perpareGame();
+        if(run == 'X')
         run = battingTeam.getBatsmanOnStrike().simulateRun(gameProperties.noBall);
         gameProperties.noBall = false;
 

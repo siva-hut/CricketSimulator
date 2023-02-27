@@ -1,4 +1,4 @@
-package com.circketApplication.service.impl;
+package com.circketApplication.service.impl.dataService;
 
 import com.circketApplication.dao.entities.BallDataDao;
 import com.circketApplication.dao.repositories.BallDataRepository;
@@ -17,7 +17,8 @@ public class BallDetailService {
         List<BallDetailResponse> ballDetailResponseList = new ArrayList<>();
         for (BallDataDao ballDataDao:ballDataDaoList) {
             ballDetailResponseList.add(
-                    BallDetailResponse.builder().ballOutCome(ballDataDao.getBallOutCome()).overs(ballDataDao.getOvers())
+                    BallDetailResponse.builder().
+                            ballOutCome(ballDataDao.getBallOutCome()).overs(ballDataDao.getOvers())
                             .batsmanId(ballDataDao.getBatsmanId()).batsmanName(ballDataDao.getBatsman().getName())
                             .bowlerId(ballDataDao.getBowlerId()).bowlerName(ballDataDao.getBowler().getName())
                             .innings(ballDataDao.getInnings())

@@ -1,4 +1,4 @@
-package com.circketApplication.service.impl;
+package com.circketApplication.service.impl.dataService;
 
 import com.circketApplication.dao.entities.GameDao;
 import com.circketApplication.dao.entities.TeamStatsDao;
@@ -39,7 +39,7 @@ public class GameDetailService {
     }
     public GetAllGameResponse getAllActiveGames()
     {
-        List<GameDao> gameDaoList = gameRepository.findByEndDateIsNull();
+        List<GameDao> gameDaoList = gameRepository.findByGameActive(true);
         List<GameResponse> gameResponseList= convert(gameDaoList);
         return GetAllGameResponse.builder().gameList(gameResponseList)
                 .status("success").message("List of games").build();
@@ -50,6 +50,8 @@ public class GameDetailService {
         TeamStatsDao team1 = teamStatsDaoList.get(0);
         TeamStatsDao team2 = teamStatsDaoList.get(1);
         return GameDetailResponse.builder().gameId(gameDao.getId())
+                .status("success")
+                .message("Game results")
                 .team1Name(team1.getTeamName())
                 .team1battingOvers(team1.getBattingOvers())
                 .team1bowlingovers(team1.getBowlingovers())

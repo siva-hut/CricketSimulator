@@ -2,8 +2,8 @@ package com.circketApplication.Controller;
 
 import com.circketApplication.dataModels.response.GameDetailResponse;
 import com.circketApplication.dataModels.response.GetAllGameResponse;
-import com.circketApplication.service.GameService;
-import com.circketApplication.service.impl.GameDetailService;
+import com.circketApplication.service.interfaces.GameService;
+import com.circketApplication.service.impl.dataService.GameDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +27,13 @@ public class GameController {
         return gameDetailService.getGameDetails(gameId);
     }
     @PostMapping("/pauseGame")
-    public void pauseGame(@RequestParam Long gameId){
-        System.out.println("TF");
+    public String pauseGame(@RequestParam Long gameId){
         gameService.pauseGame(gameId);
+        return "Game paused";
+    }
+    @PostMapping("/resumeGame")
+    public String resumeGame(@RequestParam Long gameId){
+        gameService.resumeGame(gameId);
+        return "Game resumed";
     }
 }

@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class GameDetailResponse {
+    String status;
+    String message;
     Long gameId;
     String team1Name;
     String team2Name;

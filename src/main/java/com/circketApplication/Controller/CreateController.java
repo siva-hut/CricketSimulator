@@ -5,7 +5,7 @@ import com.circketApplication.dataModels.request.CreatePlayerRequest;
 import com.circketApplication.dataModels.request.CreateTeamRequest;
 import com.circketApplication.dataModels.response.CreateGameResponse;
 import com.circketApplication.dataModels.response.CreatePlayerResponse;
-import com.circketApplication.service.impl.CreateService;
+import com.circketApplication.service.interfaces.CreateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

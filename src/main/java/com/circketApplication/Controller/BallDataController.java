@@ -1,10 +1,9 @@
 package com.circketApplication.Controller;
 
 import com.circketApplication.cricketGame.GameBuilder;
-import com.circketApplication.dao.entities.BallDataDao;
 import com.circketApplication.dataModels.response.BallDetailResponse;
-import com.circketApplication.service.GameService;
-import com.circketApplication.service.impl.BallDetailService;
+import com.circketApplication.service.interfaces.GameService;
+import com.circketApplication.service.impl.dataService.BallDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,16 +28,11 @@ public class BallDataController {
         return ballDetailService.getOverDetails(gameId,over);
     }
     @GetMapping("/getSpecificBallDetails")
-    public void getSpecificBallDetails(@RequestParam String gameId, @RequestParam String over) {
-
+    public List<BallDetailResponse> getSpecificBallDetails(@RequestParam Long gameId, @RequestParam float over) {
+        return ballDetailService.getOverDetailsByRange(gameId,over,over);
     }
     @GetMapping("/getBallDetailsWithinRange")
-    public List<BallDetailResponse> getBallDetailsWithinRange(@RequestParam Long gameId, @RequestParam float startrange,@RequestParam float endRange) {
-        return ballDetailService.getOverDetailsByRange(gameId,startrange,endRange);
-    }
-    @GetMapping("/startGame")
-    public void startGame() {
-        GameBuilder gameBuilder = new GameBuilder();
-        gameService.createGame(gameBuilder);
+    public List<BallDetailResponse> getBallDetailsWithinRange(@RequestParam Long gameId, @RequestParam float startRange,@RequestParam float endRange) {
+        return ballDetailService.getOverDetailsByRange(gameId,startRange,endRange);
     }
 }

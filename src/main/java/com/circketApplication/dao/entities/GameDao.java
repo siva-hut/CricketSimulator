@@ -41,5 +41,6 @@ public class GameDao {
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="game")
     private List<TeamStatsDao> teamStatsDaos;
     private int totalOvers;
+    private boolean gameActive;
 
 }
