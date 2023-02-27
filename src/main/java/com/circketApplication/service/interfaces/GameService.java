@@ -8,4 +8,5 @@ public interface GameService {
     void simulateNextBall();
     void addGame(Game game);
     void pauseGame(Long gameId);
+    void resumeGame(Long gameId);
 }

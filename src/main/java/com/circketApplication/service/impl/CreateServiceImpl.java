@@ -9,17 +9,19 @@ import com.circketApplication.dataModels.request.CreatePlayerRequest;
 import com.circketApplication.dataModels.request.CreateTeamRequest;
 import com.circketApplication.dataModels.response.CreateGameResponse;
 import com.circketApplication.dataModels.response.CreatePlayerResponse;
-import com.circketApplication.service.CricketGamePersistence;
-import com.circketApplication.service.GameService;
+import com.circketApplication.service.interfaces.CreateService;
+import com.circketApplication.service.interfaces.CricketGamePersistence;
+import com.circketApplication.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateService {
+public class CreateServiceImpl implements CreateService {
     @Autowired
     private CricketGamePersistence cricketGamePersistence;
     @Autowired
     private GameService gameService;
+    @Override
     public CreatePlayerResponse createPlayer(CreatePlayerRequest createPlayerRequest){
         CreatePlayerResponse createPlayerResponse = CreatePlayerResponse.builder().build();
         Player player;
@@ -43,6 +45,7 @@ public class CreateService {
         }
         return createPlayerResponse;
     }
+    @Override
     public String createTeam(CreateTeamRequest createTeamRequest){
         try {
             cricketGamePersistence.persist(createTeamRequest.getTeamName());
@@ -53,6 +56,7 @@ public class CreateService {
         }
         return "Some error occurred";
     }
+    @Override
     public CreateGameResponse createGame(CreateGameRequest createGameRequest){
 
         try {

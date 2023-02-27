@@ -1,4 +1,4 @@
-package com.circketApplication.service.impl;
+package com.circketApplication.service.impl.dataService;
 
 import com.circketApplication.dao.entities.PlayerDao;
 import com.circketApplication.dao.repositories.PlayerRepository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class PlayerService {
+public class PlayerDetailService {
     int x = 0;
     @Autowired
     private PlayerRepository playerRepository;

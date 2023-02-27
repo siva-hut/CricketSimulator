@@ -9,5 +9,5 @@ public interface CricketGamePersistence {
     void persistBallData(Game game);
     void persistGameOnCompletion(Game game);
     void persistNewPlayer(Player player,String teamName);
-    void reloadGame(Game game);
+    Game reloadGame(Long gameId);
 }
