@@ -1,4 +1,4 @@
-package com.CircketSimu.App;
+package com.circketApplication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
