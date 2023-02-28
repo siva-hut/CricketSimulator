@@ -26,13 +26,13 @@ public class App {
 		SpringApplication.run(App.class,args);
 
 	}
-	@EventListener(ApplicationReadyEvent.class)
-	public void startGames(){
-		List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThan(new Timestamp(System.currentTimeMillis()));
-		for (GameDao gameDao:gameDaoList) {
-			gameService.resumeGame(gameDao);
-		}
-	}
+//	@EventListener(ApplicationReadyEvent.class)
+//	public void startGames(){
+//		List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThan(new Timestamp(System.currentTimeMillis()));
+//		for (GameDao gameDao:gameDaoList) {
+//			gameService.resumeGame(gameDao);
+//		}
+//	}
 	@Scheduled(fixedRate=1000)
 	public void loadGames(){
 		List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThanAndGameActive(new Timestamp(System.currentTimeMillis()),false);

@@ -148,7 +148,9 @@ public class Team {
     }
     public void changeBowler()
     {
-        bowlerIndex = RandomGenerator.random.nextInt(4,11);
+        bowlerIndex++;
+        if(bowlerIndex==11)
+            bowlerIndex=7;
     }
 
 }
