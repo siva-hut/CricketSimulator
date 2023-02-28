@@ -3,8 +3,8 @@ package com.circketApplication.service.impl;
 import com.circketApplication.cricketGame.Game;
 import com.circketApplication.cricketGame.GameBuilder;
 import com.circketApplication.dao.entities.GameDao;
+import com.circketApplication.dao.repositories.BallDataRepository;
 import com.circketApplication.dao.repositories.GameRepository;
-import com.circketApplication.service.interfaces.CricketGamePersistence;
 import com.circketApplication.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,11 +17,13 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private GameRepository gameRepository;
     @Autowired
-    private CricketGamePersistence cricketGamePersistence;
+    private BallDataRepository ballDataRepository;
+    @Autowired
+    private ReloadGameService reloadGameService;
     @Override
     public Long createGame(GameBuilder gameBuilder) {
         Game game =  gameBuilder.getGame();
-        cricketGamePersistence.persistGameCreation(game);
+        gameRepository.persistGameCreation(game);
         GameDao gameDao= gameRepository.findById(game.getId()).get();
         gameDao.setGameActive(true);
         gameRepository.save(gameDao);
@@ -31,21 +33,21 @@ public class GameServiceImpl implements GameService {
     @Override
     public Long scheduleGame(GameBuilder gameBuilder,Date date){
         Game game =  gameBuilder.getGame();
-        cricketGamePersistence.persistGameCreation(game,date);
+        gameRepository.persistGameCreation(game,date);
         return game.getId();
     }
     public static List<Game> activeGameArray = Collections.synchronizedList(new ArrayList<Game>());
     public static Map<Long, Integer> hashMap = new HashMap<Long, Integer>();
-    @Scheduled(fixedRate=1000)
+    @Scheduled(fixedRate=100)
     public void simulateNextBall()
     {
         Iterator<Game> itr= activeGameArray.iterator();
         while(itr.hasNext()){
             Game game = itr.next();
             game.simulateNextBall('X');
-            cricketGamePersistence.persistBallData(game);
+            ballDataRepository.persistBallData(game);
             if(game.isGameOver()) {
-                cricketGamePersistence.persistGameOnCompletion(game);
+                gameRepository.persistGameOnCompletion(game);
                 itr.remove();
             }
         }
@@ -66,13 +68,13 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void resumeGame(Long gameId) {
-            Game game = cricketGamePersistence.reloadGame(gameId);
+            Game game = reloadGameService.reloadGame(gameId);
             addGame(game);
     }
 
     @Override
     public void resumeGame(GameDao gameDao) {
-        Game game = cricketGamePersistence.reloadGame(gameDao);
+        Game game = reloadGameService.reloadGame(gameDao);
         addGame(game);
     }
 }

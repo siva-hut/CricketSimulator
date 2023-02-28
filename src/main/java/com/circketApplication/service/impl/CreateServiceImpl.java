@@ -5,6 +5,7 @@ import com.circketApplication.cricketGame.player.Player;
 import com.circketApplication.cricketGame.player.PlayerFactory;
 import com.circketApplication.cricketGame.util.RandomGenerator;
 import com.circketApplication.dao.entities.TeamDao;
+import com.circketApplication.dao.repositories.PlayerRepository;
 import com.circketApplication.dao.repositories.TeamRepository;
 import com.circketApplication.dataModels.request.CreateGameRequest;
 import com.circketApplication.dataModels.request.CreatePlayerRequest;
@@ -12,7 +13,6 @@ import com.circketApplication.dataModels.request.CreateTeamRequest;
 import com.circketApplication.dataModels.response.CreateGameResponse;
 import com.circketApplication.dataModels.response.CreatePlayerResponse;
 import com.circketApplication.service.interfaces.CreateService;
-import com.circketApplication.service.interfaces.CricketGamePersistence;
 import com.circketApplication.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ import java.util.Date;
 @Service
 public class CreateServiceImpl implements CreateService {
     @Autowired
-    private CricketGamePersistence cricketGamePersistence;
-    @Autowired
     private TeamRepository teamRepository;
+    @Autowired
+    private PlayerRepository playerRepository;
     @Autowired
     private GameService gameService;
 
@@ -41,7 +41,7 @@ public class CreateServiceImpl implements CreateService {
             player = PlayerFactory.getBowler(createPlayerRequest.getPlayerName());
         }
         try {
-            cricketGamePersistence.persistNewPlayer(player, createPlayerRequest.getTeamName());
+            playerRepository.persistNewPlayer(player, createPlayerRequest.getTeamName());
             createPlayerResponse.setStatus("success");
             createPlayerResponse.setMessage("Player created successfully");
             createPlayerResponse.setPlayerId(player.getId());
@@ -57,7 +57,7 @@ public class CreateServiceImpl implements CreateService {
         try {
             if(teamRepository.findByName(createTeamRequest.getTeamName())!=null)
                 return "Team already Exists";
-            cricketGamePersistence.persist(createTeamRequest.getTeamName());
+            teamRepository.persist(createTeamRequest.getTeamName());
             return "Team created successfully";
         } catch (Exception ex) {
 

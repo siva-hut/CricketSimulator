@@ -21,8 +21,4 @@ public class PlayerController {
     public GetPlayerResponse getPlayerDetails(@RequestParam Long playerId){
         return playerDetailService.getPlayer(playerId);
     }
-    @GetMapping("/thread")
-    public void test() throws InterruptedException {
-        playerDetailService.test();
-    }
 }

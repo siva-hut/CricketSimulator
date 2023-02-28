@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class PlayerDetailService {
-    int x = 0;
     @Autowired
     private PlayerRepository playerRepository;
     private List<PlayerResponse>convert(List<PlayerDao> playerDaoList){
@@ -49,11 +48,5 @@ public class PlayerDetailService {
         catch (Exception ex){
             return GetPlayerResponse.builder().status("error").message("Could not find the player").build();
         }
-    }
-    public void test() throws InterruptedException {
-        x++;
-        Thread.sleep(5000);
-        x = x*x;
-        System.out.println(x);
     }
 }
