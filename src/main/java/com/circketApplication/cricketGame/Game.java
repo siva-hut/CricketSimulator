@@ -16,14 +16,15 @@ public class Game {
     private int innings = 1;
     private GameProperties gameProperties = new GameProperties();
     private boolean gameOver = false;
-    public void simulateNextBall(char value)
+    public void simulateNextBall()
     {
-        run = value;
-        perpareGame();
-        if(run == 'X')
         run = battingTeam.getBatsmanOnStrike().simulateRun(gameProperties.noBall);
+        simulateNextBall(run);
+    }
+    public void simulateNextBall(char run){
+        this.run = run;
+        prepareGame();
         gameProperties.noBall = false;
-
         switch (run) {
             case 'w':
                 gameProperties.setWicketSimulation(true);
@@ -38,13 +39,12 @@ public class Game {
             default:
                 runSimulation();
         }
-
         if (overs.overCompleted()) {
             bowlingTeam.changeBowler();
         }
         checkGameStatus();
     }
-    private  void perpareGame()
+    private  void prepareGame()
     {
         if(gameProperties.isSwitchSides()) {
             switchSides();
@@ -110,12 +110,4 @@ public class Game {
             }
         }
     }
-}
-@Setter
-@Getter
-class GameProperties{
-    private boolean switchSides = false;
-    private boolean wicketSimulation = false;
-    private boolean changeStrike = false;
-    boolean noBall = false;
 }

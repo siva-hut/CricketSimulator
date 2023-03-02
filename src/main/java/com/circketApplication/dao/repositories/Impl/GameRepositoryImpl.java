@@ -35,40 +35,29 @@ public class GameRepositoryImpl {
     @Autowired
     @Lazy
     private TeamStatsRepository teamStatsRepository;
+    //Create the game and start
     public void persistGameCreation(Game game) {
-        if(game.getId()==null) {
-            teamRepository.persistAndLoadPlayers(game.getBattingTeam());
-            teamRepository.persistAndLoadPlayers(game.getBowlingTeam());
-            GameDao gameDao = GameDao.builder()
-                    .firstBattingTeamName(game.getBattingTeam().getTeamName())
-                    .firstBowlingTeamName(game.getBowlingTeam().getTeamName())
-                    .totalOvers(game.getOvers().getTotalOvers())
-                    .startDate(new Timestamp(System.currentTimeMillis()))
-                    .gameActive(false)
-                    .build();
-            gameRepository.save(gameDao);
-            game.setId(gameDao.getId());
-            gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBattingTeam(),game.getId());
-            gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBowlingTeam(),game.getId());
-        }
+        persistGameCreation(game,new Date(),false);
     }
-
+    //Create the game and start in the future
     public void persistGameCreation(Game game, Date date) {
-        if(game.getId()==null) {
-            teamRepository.persistAndLoadPlayers(game.getBattingTeam());
-            teamRepository.persistAndLoadPlayers(game.getBowlingTeam());
-            GameDao gameDao = GameDao.builder()
-                    .firstBattingTeamName(game.getBattingTeam().getTeamName())
-                    .firstBowlingTeamName(game.getBowlingTeam().getTeamName())
-                    .totalOvers(game.getOvers().getTotalOvers())
-                    .startDate(new Timestamp(date.getTime()))
-                    .gameActive(false)
-                    .build();
-            gameRepository.save(gameDao);
-            game.setId(gameDao.getId());
-            gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBattingTeam(),game.getId());
-            gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBowlingTeam(),game.getId());
-        }
+        persistGameCreation(game,date,false);
+    }
+    //Create the game, create or load the teams, create or load the Players
+    private void persistGameCreation(Game game, Date date,boolean gameActive){
+        teamRepository.persistAndLoadPlayers(game.getBattingTeam());
+        teamRepository.persistAndLoadPlayers(game.getBowlingTeam());
+        GameDao gameDao = GameDao.builder()
+                .firstBattingTeamName(game.getBattingTeam().getTeamName())
+                .firstBowlingTeamName(game.getBowlingTeam().getTeamName())
+                .totalOvers(game.getOvers().getTotalOvers())
+                .startDate(new Timestamp(date.getTime()))
+                .gameActive(gameActive)
+                .build();
+        gameRepository.save(gameDao);
+        game.setId(gameDao.getId());
+        gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBattingTeam(),game.getId());
+        gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBowlingTeam(),game.getId());
     }
     private void updatePlayersAndPlayerStatsInTeam(Team team, Long id)
     {
@@ -84,6 +73,7 @@ public class GameRepositoryImpl {
         updatePlayersAndPlayerStatsInTeam(game.getBattingTeam(),game.getId());
         updatePlayersAndPlayerStatsInTeam(game.getBowlingTeam(),game.getId());
     }
+    //Saving Player and Team details after the game is over
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
         GameDao gameDao = gameRepository.findById(game.getId()).get();

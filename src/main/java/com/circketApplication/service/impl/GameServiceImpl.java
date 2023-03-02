@@ -24,9 +24,6 @@ public class GameServiceImpl implements GameService {
     public Long createGame(GameBuilder gameBuilder) {
         Game game =  gameBuilder.getGame();
         gameRepository.persistGameCreation(game);
-        GameDao gameDao= gameRepository.findById(game.getId()).get();
-        gameDao.setGameActive(true);
-        gameRepository.save(gameDao);
         addGame(game);
         return game.getId();
     }
@@ -44,7 +41,7 @@ public class GameServiceImpl implements GameService {
         Iterator<Game> itr= activeGameArray.iterator();
         while(itr.hasNext()){
             Game game = itr.next();
-            game.simulateNextBall('X');
+            game.simulateNextBall();
             ballDataRepository.persistBallData(game);
             if(game.isGameOver()) {
                 gameRepository.persistGameOnCompletion(game);

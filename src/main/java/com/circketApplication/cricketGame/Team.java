@@ -18,7 +18,7 @@ import java.util.Vector;
 public class Team {
     private Long id;
     private boolean[] notDoneBatting = new boolean[11];
-    private Vector<Player> players;
+    private ArrayList<Player> players = new ArrayList<>(11);
     private Player batsmanOnStrike;
     private Player batsmanOffStrike;
     private String teamName;
@@ -27,66 +27,10 @@ public class Team {
     private int wicketsLost = 0;
     private int bowlerIndex = 8;
     private Overs battingOvers;
-    void createTeamPlayers(ArrayList<String> playerNames, int numberOfBatsman)
-    {
-        Faker faker = new Faker();
-        players = new Vector<>(11);
-        while (playerNames.size()<11)
-        {
-            playerNames.add(faker.name().name());
-        }
-        for (int i=0;i<11;i++)
-        {   if(i<numberOfBatsman)
-            {
-                players.add(i, PlayerFactory.getBatsman(playerNames.get(i)));
-            }
-            else
-            {
-                players.add(i, PlayerFactory.getBowler(playerNames.get(i)));
-            }
-        }
-        batsmanOnStrike = players.get(0);
-        notDoneBatting[0] = true;
-        batsmanOffStrike = players.get(1);
-        notDoneBatting[1] = true;
-    }
     public void createTeamPlayers(List<PlayerDao> playerDaos)
     {
-        Faker faker = new Faker();
-        players = new Vector<>(11);
-        if(playerDaos==null)
-            playerDaos = new ArrayList<>();
-        while (playerDaos.size()<11) {
-            playerDaos.add(PlayerDao.builder().
-                    name(faker.name().name()).
-                    teamName(teamName).playerType(RandomGenerator.
-                            getRandomGenerator().
-                            getRandomPlayer()).build());
-
-        }
-        for (int i=0;i<11;i++) {
-            PlayerDao playerDao = playerDaos.get(i);
-            Player player;
-            if(playerDao.getPlayerType()==null)
-            {
-                int random = new Random().nextInt(2);
-                if(random==1)
-                    playerDao.setPlayerType("Bowler");
-                else
-                    playerDao.setPlayerType("Batsman");
-            }
-            if(playerDao.getPlayerType().equals("Bowler")) {
-                player = PlayerFactory.getBowler(playerDao.getName());
-            }
-            else{
-                player = PlayerFactory.getBatsman(playerDao.getName());
-            }
-            player.setId(playerDao.getId());
-//            player.setBallsFaced(playerDao.getBallsFaced());
-//            player.setOversBowled(new Overs(0,playerDao.getBallsBowled()));
-//            player.setRunsScored(playerDao.getRunsScored());
-//            player.setWicketsTaken(playerDao.getWicketsTaken());
-//            player.setRunsGiven(playerDao.getRunsGiven());
+        for (PlayerDao playerDao:playerDaos) {
+            Player player = PlayerFactory.createPlayer(playerDao);
             players.add(player);
         }
         batsmanOnStrike = players.get(0);
@@ -114,13 +58,13 @@ public class Team {
     {
         return batsmanOffStrike;
     }
-    public void changeStrike()
+    protected void changeStrike()
     {
         Player duplicate = batsmanOnStrike;
         batsmanOnStrike = batsmanOffStrike;
         batsmanOffStrike = duplicate;
     }
-    public void nextBatsman()
+    protected void nextBatsman()
     {
         int index = players.indexOf(batsmanOnStrike)+1;
         while(index<notDoneBatting.length)
@@ -134,11 +78,11 @@ public class Team {
             index++;
         }
     }
-    public void increaseWicketLost()
+    protected void increaseWicketLost()
     {
         wicketsLost++;
     }
-    public void increaseScore(int run)
+    protected void increaseScore(int run)
     {
         score+=run;
     }
@@ -146,7 +90,7 @@ public class Team {
     {
         return players.get(bowlerIndex);
     }
-    public void changeBowler()
+    protected void changeBowler()
     {
         bowlerIndex++;
         if(bowlerIndex==11)

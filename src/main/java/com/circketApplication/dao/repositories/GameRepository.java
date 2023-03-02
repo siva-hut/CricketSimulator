@@ -15,7 +15,7 @@ public interface GameRepository extends JpaRepository<GameDao,Long> {
     List<GameDao> findByEndDateIsNullAndStartDateLessThan(Timestamp startDate);
     List<GameDao> findByGameActive(Boolean gameActive);
     List<GameDao> findByEndDateIsNullAndStartDateLessThanAndGameActive(Timestamp startDate, Boolean gameActive);
-    void persistGameCreation(Game game);
+    GameDao persistGameCreation(Game game);
     void persistGameCreation(Game game, Date date);
     void persistGameOnCompletion(Game game);
 }

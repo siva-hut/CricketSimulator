@@ -13,6 +13,8 @@ import java.util.List;
 public class BallDetailService {
     @Autowired
     private BallDataRepository ballDataRepository;
+
+    //Converting BallDataDao to BallData Response
     private List<BallDetailResponse> convert(List<BallDataDao> ballDataDaoList){
         List<BallDetailResponse> ballDetailResponseList = new ArrayList<>();
         for (BallDataDao ballDataDao:ballDataDaoList) {

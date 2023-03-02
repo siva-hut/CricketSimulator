@@ -17,12 +17,16 @@ public class PlayerStatsRepositoryImpl {
     @Autowired
     @Lazy
     private PlayerStatsRepository playerStatsRepository;
-    public void updatePlayerStats(Player player, Long gameId) {
+
+    private PlayerStatsCompositeKey getPlayerStatsCompositeKey(Player player,Long gameId){
         PlayerStatsCompositeKey playerStatsCompositeKey = new PlayerStatsCompositeKey();
         playerStatsCompositeKey.setPlayerId(player.getId());
         playerStatsCompositeKey.setGameId(gameId);
+        return playerStatsCompositeKey;
+    }
+    public void updatePlayerStats(Player player, Long gameId) {
         PlayerStatsDao playerStatsDao = new PlayerStatsDao();
-        playerStatsDao.setPlayerStatsCompositeKey(playerStatsCompositeKey);
+        playerStatsDao.setPlayerStatsCompositeKey(getPlayerStatsCompositeKey(player,gameId));
         playerStatsDao.setBallsBowled(player.getOversBowled().getNumberOfBalls());
         playerStatsDao.setBallsFaced(player.getBallsFaced());
         playerStatsDao.setWicketsTaken(player.getWicketsTaken());

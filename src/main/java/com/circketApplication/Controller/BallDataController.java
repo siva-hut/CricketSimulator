@@ -16,9 +16,9 @@ import java.util.List;
 @RequestMapping("/api")
 public class BallDataController {
     @Autowired
-    GameService gameService;
+    private GameService gameService;
     @Autowired
-    BallDetailService ballDetailService;
+    private BallDetailService ballDetailService;
     @GetMapping("/getAllBallDetails")
     public List<BallDetailResponse> getEntireMatchDetails(@RequestParam Long gameId) {
         return ballDetailService.getAllBallDetails(gameId);

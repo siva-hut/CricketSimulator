@@ -16,6 +16,8 @@ import java.util.List;
 public class GameDetailService {
     @Autowired
     private GameRepository gameRepository;
+
+    //Convert GameDao to Game Response
     private List<GameResponse> convert(List<GameDao> gameDaoList)
     {
         List<GameResponse> gameResponseList = new ArrayList<>();
@@ -49,6 +51,11 @@ public class GameDetailService {
         List<TeamStatsDao> teamStatsDaoList = gameDao.getTeamStatsDaos();
         TeamStatsDao team1 = teamStatsDaoList.get(0);
         TeamStatsDao team2 = teamStatsDaoList.get(1);
+        return createGameDetailResponse(gameDao,team1,team2);
+    }
+
+    //Building detailed game response
+    private GameDetailResponse createGameDetailResponse(GameDao gameDao,TeamStatsDao team1,TeamStatsDao team2){
         return GameDetailResponse.builder().gameId(gameDao.getId())
                 .status("success")
                 .message("Game results")

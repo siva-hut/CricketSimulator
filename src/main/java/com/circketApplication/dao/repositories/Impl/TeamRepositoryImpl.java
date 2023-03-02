@@ -2,15 +2,22 @@ package com.circketApplication.dao.repositories.Impl;
 
 import com.circketApplication.cricketGame.Team;
 import com.circketApplication.cricketGame.player.Player;
+import com.circketApplication.cricketGame.util.RandomGenerator;
+import com.circketApplication.dao.entities.PlayerDao;
 import com.circketApplication.dao.entities.TeamDao;
 import com.circketApplication.dao.repositories.PlayerRepository;
 import com.circketApplication.dao.repositories.TeamRepository;
+import com.github.javafaker.Faker;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 @Component
 public class TeamRepositoryImpl {
@@ -30,8 +37,21 @@ public class TeamRepositoryImpl {
                     .gamesDrew(0).build();
             teamRepository.save(teamDao);
         }
-        team.createTeamPlayers(teamRepository.findByName(team.getTeamName()).getPlayers());
+        loadPlayers(teamRepository.findByName(team.getTeamName()).getPlayers(),team);
         persistPlayersInTeam(team);
+    }
+    //Loads players from DB or creates if not enough players
+    private void loadPlayers(List<PlayerDao> playerDaos,Team team){
+        Faker faker = new Faker();
+        if(playerDaos==null)
+            playerDaos = new ArrayList<>();
+        while (playerDaos.size()<11) {
+            playerDaos.add(PlayerDao.builder().
+                    name(faker.name().name()).
+                    teamName(team.getTeamName()).
+                    playerType(RandomGenerator.getRandomGenerator().getRandomPlayer()).build());
+        }
+        team.createTeamPlayers(playerDaos);
     }
     private void persistPlayersInTeam(Team team)
     {
@@ -43,6 +63,9 @@ public class TeamRepositoryImpl {
     public void persist(String teamName) {
         teamRepository.save(TeamDao.builder().name(teamName).build());
     }
+
+    //Updating Team wins and losses
+    //Lock type - pessimistic To prevent Dirty reads
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void updateTeam(Team team1,Team team2)

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CreateController {
     @Autowired
-    CreateService createService;
+    private CreateService createService;
     @PostMapping("/createPlayer")
     public CreatePlayerResponse createPlayer(@RequestBody CreatePlayerRequest createPlayerRequest) {
         return createService.createPlayer(createPlayerRequest);

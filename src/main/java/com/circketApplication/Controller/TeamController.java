@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class TeamController {
     @Autowired
-    TeamDetailService teamDetailService;
+    private TeamDetailService teamDetailService;
     @GetMapping("/getAllTeams")
     public GetAllTeamResponse getAllTeams(){
             return teamDetailService.getAllTeams();

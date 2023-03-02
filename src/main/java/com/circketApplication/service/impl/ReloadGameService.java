@@ -37,11 +37,7 @@ public class ReloadGameService {
     public Game reloadGame(GameDao gameDao) {
         gameDao.setGameActive(true);
         gameRepository.save(gameDao);
-        GameBuilder gameBuilder = new GameBuilder();
-        gameBuilder.setTotalOvers(gameDao.getTotalOvers());
-        gameBuilder.setTeam1Name(gameDao.getFirstBattingTeamName());
-        gameBuilder.setTeam2Name(gameDao.getFirstBowlingTeamName());
-        Game game = gameBuilder.getGame();
+        Game game = buildGame(gameDao);
         game.setId(gameDao.getId());
         game.getBattingTeam().createTeamPlayers(getPlayers(game.getId(),game.getBattingTeam().getTeamName()));
         game.getBowlingTeam().createTeamPlayers(getPlayers(game.getId(),game.getBowlingTeam().getTeamName()));
@@ -49,6 +45,14 @@ public class ReloadGameService {
         for (BallDataDao ballDataDao:ballDataDaoList) {
             game.simulateNextBall(ballDataDao.getBallOutCome());
         }
+        return game;
+    }
+    private Game buildGame(GameDao gameDao){
+        GameBuilder gameBuilder = new GameBuilder();
+        gameBuilder.setTotalOvers(gameDao.getTotalOvers());
+        gameBuilder.setTeam1Name(gameDao.getFirstBattingTeamName());
+        gameBuilder.setTeam2Name(gameDao.getFirstBowlingTeamName());
+        Game game = gameBuilder.getGame();
         return game;
     }
 }

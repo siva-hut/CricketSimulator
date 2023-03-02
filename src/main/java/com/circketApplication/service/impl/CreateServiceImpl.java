@@ -4,7 +4,7 @@ import com.circketApplication.cricketGame.GameBuilder;
 import com.circketApplication.cricketGame.player.Player;
 import com.circketApplication.cricketGame.player.PlayerFactory;
 import com.circketApplication.cricketGame.util.RandomGenerator;
-import com.circketApplication.dao.entities.TeamDao;
+import com.circketApplication.dao.entities.PlayerDao;
 import com.circketApplication.dao.repositories.PlayerRepository;
 import com.circketApplication.dao.repositories.TeamRepository;
 import com.circketApplication.dataModels.request.CreateGameRequest;
@@ -31,20 +31,18 @@ public class CreateServiceImpl implements CreateService {
     @Override
     public CreatePlayerResponse createPlayer(CreatePlayerRequest createPlayerRequest) {
         CreatePlayerResponse createPlayerResponse = CreatePlayerResponse.builder().build();
-        Player player;
         if (!createPlayerRequest.getPlayerType().equals("Batsman") && !createPlayerRequest.getPlayerType().equals("Bowler")) {
             createPlayerRequest.setPlayerType(RandomGenerator.getRandomGenerator().getRandomPlayer());
         }
-        if (createPlayerRequest.getPlayerType().equals("Batsman")) {
-            player = PlayerFactory.getBatsman(createPlayerRequest.getPlayerName());
-        } else {
-            player = PlayerFactory.getBowler(createPlayerRequest.getPlayerName());
-        }
+        PlayerDao playerDao =PlayerDao.builder().name(createPlayerRequest.getPlayerName()).
+                teamName(createPlayerRequest.getTeamName()).
+                playerType(createPlayerRequest.getPlayerType())
+                .build();
         try {
-            playerRepository.persistNewPlayer(player, createPlayerRequest.getTeamName());
+            playerRepository.save(playerDao);
             createPlayerResponse.setStatus("success");
             createPlayerResponse.setMessage("Player created successfully");
-            createPlayerResponse.setPlayerId(player.getId());
+            createPlayerResponse.setPlayerId(playerDao.getId());
         } catch (Exception ex) {
             createPlayerResponse.setStatus("error");
             createPlayerResponse.setMessage("Team does not exist");
@@ -60,9 +58,8 @@ public class CreateServiceImpl implements CreateService {
             teamRepository.persist(createTeamRequest.getTeamName());
             return "Team created successfully";
         } catch (Exception ex) {
-
+            return "Some error occurred";
         }
-        return "Some error occurred";
     }
 
     @Override
@@ -74,15 +71,14 @@ public class CreateServiceImpl implements CreateService {
             gameBuilder.setTeam2Name(createGameRequest.getFirstBowlingTeamName());
             gameBuilder.setTotalOvers(createGameRequest.getTotalOvers());
             if (createGameRequest.startDate!=null && createGameRequest.startDate.after(new Date())) {
-                System.out.println(createGameRequest.startDate);
                 return scheduleGame(gameBuilder,createGameRequest.startDate);
             } else {
                 return startGame(gameBuilder);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            return CreateGameResponse.builder().status("error").message("could not create game").build();
         }
-        return CreateGameResponse.builder().status("error").message("could not create game").build();
     }
 
     private CreateGameResponse scheduleGame(GameBuilder gameBuilder,Date date) {

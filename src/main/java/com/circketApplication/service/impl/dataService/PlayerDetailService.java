@@ -13,6 +13,7 @@ import java.util.List;
 public class PlayerDetailService {
     @Autowired
     private PlayerRepository playerRepository;
+    //Converting PlayerDao to PlayerResponse
     private List<PlayerResponse>convert(List<PlayerDao> playerDaoList){
         List<PlayerResponse> playerResponseList = new ArrayList<>();
         for (PlayerDao playerDao:playerDaoList) {

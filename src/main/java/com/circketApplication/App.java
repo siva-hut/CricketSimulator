@@ -18,24 +18,27 @@ import java.util.List;
 @EnableScheduling
 public class App {
 	@Autowired
-	GameRepository gameRepository;
+	private GameRepository gameRepository;
 	@Autowired
-	GameService gameService;
+	private GameService gameService;
 	public static void main(String[] args) {
 
 		SpringApplication.run(App.class,args);
 
 	}
-//	@EventListener(ApplicationReadyEvent.class)
-//	public void startGames(){
-//		List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThan(new Timestamp(System.currentTimeMillis()));
-//		for (GameDao gameDao:gameDaoList) {
-//			gameService.resumeGame(gameDao);
-//		}
-//	}
+	//Runs once everytime the application starts
+	@EventListener(ApplicationReadyEvent.class)
+	public void startPastGames(){
+		List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThan(new Timestamp(System.currentTimeMillis()));
+		for (GameDao gameDao:gameDaoList) {
+			gameService.resumeGame(gameDao);
+		}
+	}
+	//Runs every second
 	@Scheduled(fixedRate=1000)
-	public void loadGames(){
-		List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThanAndGameActive(new Timestamp(System.currentTimeMillis()),false);
+	public void StartFutureGames(){
+		List<GameDao> gameDaoList = gameRepository.
+				findByEndDateIsNullAndStartDateLessThanAndGameActive(new Timestamp(System.currentTimeMillis()),false);
 		for (GameDao gameDao:gameDaoList) {
 			gameService.resumeGame(gameDao);
 		}

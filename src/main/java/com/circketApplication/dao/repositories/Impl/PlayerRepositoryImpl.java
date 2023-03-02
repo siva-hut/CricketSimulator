@@ -19,6 +19,7 @@ public class PlayerRepositoryImpl {
     @Autowired
     @Lazy
     private PlayerRepository playerRepository;
+    //Updating player, no Threads should do it at the same time, causes dirty reads
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void updatePlayer(Player player, String teamName) {
@@ -45,6 +46,5 @@ public class PlayerRepositoryImpl {
                 playerType(player.playerType()).build();
         playerRepository.save(playerDao);
         player.setId(playerDao.getId());
-
     }
 }
