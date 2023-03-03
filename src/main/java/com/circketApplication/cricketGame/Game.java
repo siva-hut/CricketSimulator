@@ -1,12 +1,12 @@
 package com.circketApplication.cricketGame;
+
 import com.circketApplication.cricketGame.util.Overs;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
+@Setter
 @Getter
 @ToString
-@Setter
 public class Game {
     private Long id;
     private char run;
@@ -96,14 +96,14 @@ public class Game {
         overs.reBall();
     }
     private void checkGameStatus()
-    {   Boolean condition1 = getOvers().ballsRemaining() == 0 || getBattingTeam().getWicketsLost()==10;
+    {   boolean condition1 = getOvers().ballsRemaining() == 0 || getBattingTeam().getWicketsLost()==10;
         if(getInnings() == 1 && condition1)
         {
             gameProperties.setSwitchSides(true);
         }
         else if(getInnings() == 2)
         {
-            Boolean condition2 = getBattingTeam().getScore()>getBowlingTeam().getScore();
+            boolean condition2 = getBattingTeam().getScore()>getBowlingTeam().getScore();
             if(condition1 || condition2)
             {   battingTeam.setBattingOvers(overs);
                 gameOver = true;

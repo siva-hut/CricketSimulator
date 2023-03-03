@@ -58,7 +58,6 @@ public class GameServiceImpl implements GameService {
     @Override
     public void pauseGame(Long gameId){
         GameDao gameDao= gameRepository.findById(gameId).get();
-        System.out.println(gameId);
         gameRepository.save(gameDao);
         activeGameArray.remove((int)hashMap.get(gameId));
     }
