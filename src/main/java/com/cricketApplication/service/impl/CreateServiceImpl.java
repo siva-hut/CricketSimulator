@@ -1,5 +1,6 @@
 package com.cricketApplication.service.impl;
 
+import com.cricketApplication.PersistenceLayer.TeamPersistence;
 import com.cricketApplication.cricketGame.GameBuilder;
 import com.cricketApplication.cricketGame.util.RandomGenerator;
 import com.cricketApplication.dao.entities.PlayerDao;
@@ -22,62 +23,61 @@ public class CreateServiceImpl implements CreateService {
     @Autowired
     private TeamRepository teamRepository;
     @Autowired
+    private TeamPersistence teamPersistence;
+    @Autowired
     private PlayerRepository playerRepository;
     @Autowired
     private GameService gameService;
 
+    private boolean validPlayerType(CreatePlayerRequest createPlayerRequest) {
+        if (createPlayerRequest.getPlayerType() == null) {
+            return true;
+        }
+        if (!createPlayerRequest.getPlayerType().equals("Batsman") && !createPlayerRequest.getPlayerType().equals("Bowler")) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public CreatePlayerResponse createPlayer(CreatePlayerRequest createPlayerRequest) {
-        if (createPlayerRequest.getPlayerType() == null)
-            createPlayerRequest.setPlayerType("s");
+
+
         CreatePlayerResponse createPlayerResponse = CreatePlayerResponse.builder().build();
-        if (!createPlayerRequest.getPlayerType().equals("Batsman") && !createPlayerRequest.getPlayerType().equals("Bowler")) {
+
+        if (validPlayerType(createPlayerRequest)) {
             createPlayerRequest.setPlayerType(RandomGenerator.getRandomGenerator().getRandomPlayer());
         }
+
         PlayerDao playerDao = PlayerDao.builder().name(createPlayerRequest.getPlayerName()).
                 teamName(createPlayerRequest.getTeamName()).
                 playerType(createPlayerRequest.getPlayerType())
                 .build();
-        try {
-            playerRepository.save(playerDao);
-            createPlayerResponse.setStatus("success");
-            createPlayerResponse.setMessage("Player created successfully");
-            createPlayerResponse.setPlayerId(playerDao.getId());
-        } catch (Exception ex) {
-            createPlayerResponse.setStatus("error");
-            createPlayerResponse.setMessage("Team does not exist");
-        }
+        playerRepository.save(playerDao);
+        createPlayerResponse.setStatus("success");
+        createPlayerResponse.setMessage("Player created successfully");
+        createPlayerResponse.setPlayerId(playerDao.getId());
         return createPlayerResponse;
     }
 
     @Override
     public String createTeam(CreateTeamRequest createTeamRequest) {
-        try {
-            if (teamRepository.findByName(createTeamRequest.getTeamName()) != null)
-                return "Team already Exists";
-            teamRepository.persist(createTeamRequest.getTeamName());
-            return "Team created successfully";
-        } catch (Exception ex) {
-            return "Some error occurred";
-        }
+        if (teamRepository.findByName(createTeamRequest.getTeamName()) != null)
+            return "Team already Exists";
+        teamPersistence.persist(createTeamRequest.getTeamName());
+        return "Team created successfully";
     }
 
     @Override
     public CreateGameResponse createGame(CreateGameRequest createGameRequest) {
-
-        try {
-            GameBuilder gameBuilder = new GameBuilder();
-            gameBuilder.setTeam1Name(createGameRequest.getFirstBattingTeamName());
-            gameBuilder.setTeam2Name(createGameRequest.getFirstBowlingTeamName());
-            gameBuilder.setTotalOvers(createGameRequest.getTotalOvers());
-            if (createGameRequest.startDate != null && createGameRequest.startDate.after(new Date())) {
-                return scheduleGame(gameBuilder, createGameRequest.startDate);
-            } else {
-                return startGame(gameBuilder);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return CreateGameResponse.builder().status("error").message("could not create game").build();
+        GameBuilder gameBuilder = new GameBuilder();
+        gameBuilder.setTeam1Name(createGameRequest.getFirstBattingTeamName());
+        gameBuilder.setTeam2Name(createGameRequest.getFirstBowlingTeamName());
+        gameBuilder.setTotalOvers(createGameRequest.getTotalOvers());
+        if (createGameRequest.startDate != null && createGameRequest.startDate.after(new Date())) {
+            return scheduleGame(gameBuilder, createGameRequest.startDate);
+        } else {
+            return startGame(gameBuilder);
         }
     }
 

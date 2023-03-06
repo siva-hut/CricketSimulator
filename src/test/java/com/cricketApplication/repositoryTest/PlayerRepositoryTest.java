@@ -1,5 +1,7 @@
 package com.cricketApplication.repositoryTest;
 
+import com.cricketApplication.PersistenceLayer.PlayerPersistence;
+import com.cricketApplication.PersistenceLayer.TeamPersistence;
 import com.cricketApplication.cricketGame.player.Player;
 import com.cricketApplication.cricketGame.player.PlayerFactory;
 import com.cricketApplication.dao.entities.PlayerDao;
@@ -9,20 +11,25 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@DataJpaTest
+@SpringBootTest
 public class PlayerRepositoryTest {
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private PlayerPersistence playerPersistence;
+    @Autowired
+    private TeamPersistence teamPersistence;
     private Player player;
     @Test
     void persistNewPlayer(){
-
+        teamPersistence.persist("CSK");
          player = PlayerFactory.createPlayer( PlayerDao.builder().
                                             name("siva").
                                             playerType("Bowler").
                                             build());
-        playerRepository.persistNewPlayer(player,"CSK");
+        playerPersistence.persistNewPlayer(player,"CSK");
         Assertions.assertNotNull(playerRepository.findById(player.getId()));
         updatePlayer();
 
@@ -32,7 +39,7 @@ public class PlayerRepositoryTest {
         player.setRunsGiven(10);
         player.setBallsFaced(10);
         player.setWicketsTaken(2);
-        playerRepository.updatePlayer(player,"CSK");
+        playerPersistence.updatePlayer(player,"CSK");
         PlayerDao playerDao = playerRepository.findById(player.getId()).get();
         Assertions.assertEquals(playerDao.getRunsScored(),player.getRunsScored());
         Assertions.assertEquals(playerDao.getRunsGiven(),player.getRunsGiven());

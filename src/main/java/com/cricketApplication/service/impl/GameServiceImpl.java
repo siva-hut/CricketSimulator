@@ -1,10 +1,10 @@
 package com.cricketApplication.service.impl;
 
+import com.cricketApplication.PersistenceLayer.BallDataPersistence;
+import com.cricketApplication.PersistenceLayer.GamePersistence;
 import com.cricketApplication.cricketGame.Game;
 import com.cricketApplication.cricketGame.GameBuilder;
 import com.cricketApplication.dao.entities.GameDao;
-import com.cricketApplication.dao.repositories.BallDataRepository;
-import com.cricketApplication.dao.repositories.GameRepository;
 import com.cricketApplication.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,16 +17,16 @@ public class GameServiceImpl implements GameService {
     public static List<Game> activeGameArray = Collections.synchronizedList(new ArrayList<Game>());
     public static Map<Long, Integer> hashMap = new HashMap<Long, Integer>();
     @Autowired
-    private GameRepository gameRepository;
+    private GamePersistence gamePersistence;
     @Autowired
-    private BallDataRepository ballDataRepository;
+    private BallDataPersistence ballDataPersistence;
     @Autowired
     private ReloadGameService reloadGameService;
 
     @Override
     public Long createGame(GameBuilder gameBuilder) {
         Game game = gameBuilder.getGame();
-        gameRepository.persistGameCreation(game);
+        gamePersistence.persistGameCreation(game);
         addGame(game);
         return game.getId();
     }
@@ -37,9 +37,9 @@ public class GameServiceImpl implements GameService {
         while (itr.hasNext()) {
             Game game = itr.next();
             game.simulateNextBall();
-            ballDataRepository.persistBallData(game);
+            ballDataPersistence.persistBallData(game);
             if (game.isGameOver()) {
-                gameRepository.persistGameOnCompletion(game);
+                gamePersistence.persistGameOnCompletion(game);
                 itr.remove();
             }
         }
@@ -53,8 +53,8 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void pauseGame(Long gameId) {
-        GameDao gameDao = gameRepository.findById(gameId).get();
-        gameRepository.save(gameDao);
+        GameDao gameDao = gamePersistence.findById(gameId);
+        gamePersistence.save(gameDao);
         activeGameArray.remove((int) hashMap.get(gameId));
     }
 
@@ -73,7 +73,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public Long scheduleGame(GameBuilder gameBuilder, Date date) {
         Game game = gameBuilder.getGame();
-        gameRepository.persistGameCreation(game, date);
+        gamePersistence.persistGameCreation(game, date);
         return game.getId();
     }
 }

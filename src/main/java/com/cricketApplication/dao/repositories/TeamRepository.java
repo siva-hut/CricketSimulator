@@ -16,9 +16,4 @@ public interface TeamRepository extends JpaRepository<TeamDao, Long> {
     @Query(value = "SELECT team_Name From Team", nativeQuery = true)
     public List<String> findAllTeamName();
 
-    void persistAndLoadPlayers(Team team);
-
-    void persist(String teamName);
-
-    void updateTeam(Team team1, Team team2);
 }

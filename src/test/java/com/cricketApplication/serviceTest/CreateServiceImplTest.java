@@ -1,8 +1,9 @@
-package com.cricketApplication.service.impl;
+package com.cricketApplication.serviceTest;
 
 import com.cricketApplication.PersistenceLayer.TeamPersistence;
 import com.cricketApplication.dao.entities.PlayerDao;
 import com.cricketApplication.dao.repositories.PlayerRepository;
+import com.cricketApplication.dao.repositories.TeamRepository;
 import com.cricketApplication.dataModels.request.CreatePlayerRequest;
 import com.cricketApplication.service.interfaces.CreateService;
 import org.aspectj.lang.annotation.Before;
@@ -25,6 +26,8 @@ class CreateServiceImplTest {
     private PlayerRepository playerRepository;
     @Autowired
     private TeamPersistence teamPersistence;
+    @Autowired
+    private TeamRepository teamRepository;
     @Test
     void createPlayer() {
         teamPersistence.persist("CSK");
@@ -37,9 +40,9 @@ class CreateServiceImplTest {
 
     @Test
     void createTeam() {
+        teamPersistence.persist("CSK");
+        Assertions.assertNotNull(teamRepository.findByName("CSK"));
+
     }
 
-    @Test
-    void createGame() {
-    }
 }

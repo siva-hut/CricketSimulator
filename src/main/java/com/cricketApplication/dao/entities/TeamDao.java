@@ -21,6 +21,6 @@ public class TeamDao {
     private int gamesLost;
     private int gamesDrew;
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "team")
+    @OneToMany( fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "team")
     private List<PlayerDao> players;
 }

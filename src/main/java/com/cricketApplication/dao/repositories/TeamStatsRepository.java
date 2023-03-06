@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeamStatsRepository extends JpaRepository<TeamStatsDao, Long> {
-    void updateTeamStats(Team team, Overs bowlingOvers, Long gameId);
+
 }

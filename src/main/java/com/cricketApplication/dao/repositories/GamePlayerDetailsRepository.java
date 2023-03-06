@@ -11,5 +11,4 @@ import java.util.List;
 public interface GamePlayerDetailsRepository extends JpaRepository<GamePlayerDetails, Long> {
     List<GamePlayerDetails> findByGameIdAndTeamNameOrderByIdAsc(Long gameId, String teamName);
 
-    void setMatchPlayerDetails(Team team, Long gameId);
 }

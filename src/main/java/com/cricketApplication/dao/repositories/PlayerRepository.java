@@ -7,7 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<PlayerDao, Long> {
-    void updatePlayer(Player player, String teamName);
 
-    void persistNewPlayer(Player player, String teamName);
 }
