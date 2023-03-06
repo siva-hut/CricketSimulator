@@ -1,5 +1,6 @@
 package com.cricketApplication.service.impl;
 
+import com.cricketApplication.PersistenceLayer.TeamPersistence;
 import com.cricketApplication.dao.entities.PlayerDao;
 import com.cricketApplication.dao.repositories.PlayerRepository;
 import com.cricketApplication.dataModels.request.CreatePlayerRequest;
@@ -10,24 +11,27 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-
+@SpringBootTest
 class CreateServiceImplTest {
-    @Mock
+    @Autowired
     private CreateService createService;
-    @InjectMocks
+    @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private TeamPersistence teamPersistence;
     @Test
     void createPlayer() {
+        teamPersistence.persist("CSK");
         CreatePlayerRequest createPlayerRequest = new CreatePlayerRequest();
         createPlayerRequest.setPlayerName("siva");
         createPlayerRequest.setPlayerType("Bowler");
-        createPlayerRequest.setTeamName("SSS");
-        when(playerRepository.save(any(PlayerDao.class))).thenReturn(new PlayerDao());
+        createPlayerRequest.setTeamName("CSK");
         Assertions.assertNotNull(createService.createPlayer(createPlayerRequest));
     }
 
