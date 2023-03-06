@@ -1,4 +1,4 @@
-package com.circketApplication.dataModels.response;
+package com.cricketApplication.dataModels.response;
 
 import lombok.Builder;
 import lombok.Getter;

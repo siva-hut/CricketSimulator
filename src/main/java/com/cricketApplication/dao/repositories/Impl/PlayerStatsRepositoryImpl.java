@@ -1,9 +1,9 @@
-package com.circketApplication.dao.repositories.Impl;
+package com.cricketApplication.dao.repositories.Impl;
 
-import com.circketApplication.cricketGame.player.Player;
-import com.circketApplication.dao.entities.PlayerStatsCompositeKey;
-import com.circketApplication.dao.entities.PlayerStatsDao;
-import com.circketApplication.dao.repositories.PlayerStatsRepository;
+import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.dao.entities.PlayerStatsCompositeKey;
+import com.cricketApplication.dao.entities.PlayerStatsDao;
+import com.cricketApplication.dao.repositories.PlayerStatsRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +18,21 @@ public class PlayerStatsRepositoryImpl {
     @Lazy
     private PlayerStatsRepository playerStatsRepository;
 
-    private PlayerStatsCompositeKey getPlayerStatsCompositeKey(Player player,Long gameId){
-        PlayerStatsCompositeKey playerStatsCompositeKey = new PlayerStatsCompositeKey();
-        playerStatsCompositeKey.setPlayerId(player.getId());
-        playerStatsCompositeKey.setGameId(gameId);
-        return playerStatsCompositeKey;
-    }
     public void updatePlayerStats(Player player, Long gameId) {
         PlayerStatsDao playerStatsDao = new PlayerStatsDao();
-        playerStatsDao.setPlayerStatsCompositeKey(getPlayerStatsCompositeKey(player,gameId));
+        playerStatsDao.setPlayerStatsCompositeKey(getPlayerStatsCompositeKey(player, gameId));
         playerStatsDao.setBallsBowled(player.getOversBowled().getNumberOfBalls());
         playerStatsDao.setBallsFaced(player.getBallsFaced());
         playerStatsDao.setWicketsTaken(player.getWicketsTaken());
         playerStatsDao.setRunsScored(player.getRunsScored());
         playerStatsDao.setRunsGiven(player.getRunsGiven());
         playerStatsRepository.save(playerStatsDao);
+    }
+
+    private PlayerStatsCompositeKey getPlayerStatsCompositeKey(Player player, Long gameId) {
+        PlayerStatsCompositeKey playerStatsCompositeKey = new PlayerStatsCompositeKey();
+        playerStatsCompositeKey.setPlayerId(player.getId());
+        playerStatsCompositeKey.setGameId(gameId);
+        return playerStatsCompositeKey;
     }
 }

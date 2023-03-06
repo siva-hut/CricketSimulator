@@ -1,16 +1,16 @@
-package com.circketApplication.dao.entities;
+package com.cricketApplication.dao.entities;
 
-import com.circketApplication.dao.entities.TeamDao;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
 @Getter
 @Setter
-public class TeamStatsCompositeKey{
+public class TeamStatsCompositeKey {
     @Column(name = "TeamName")
     private String teamName;
-    @Column(name ="GameId")
-    private Long GameId ;
+    @Column(name = "GameId")
+    private Long GameId;
 }

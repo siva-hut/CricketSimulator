@@ -1,15 +1,19 @@
-package com.circketApplication.cricketGame.player;
+package com.cricketApplication.cricketGame.player;
 
-import com.circketApplication.cricketGame.util.Overs;
+import com.cricketApplication.cricketGame.util.Overs;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public abstract class Player {
-    private Long id;
     public Overs oversBowled = new Overs(0);
+    private Long id;
     private int runsGiven = 0;
+    private int wicketsTaken = 0;
+    private String playerName;
+    private int runsScored = 0;
+    private int ballsFaced = 0;
 
     public Long getId() {
         return id;
@@ -19,22 +23,21 @@ public abstract class Player {
         this.id = id;
     }
 
-    private int wicketsTaken = 0;
     public int getRunsGiven() {
         return runsGiven;
     }
-    public void wicketTaken()
-    {
+
+    public void wicketTaken() {
         wicketsTaken++;
     }
+
     public void addRunsGiven(int run) {
         this.runsGiven += run;
     }
+
     public int getWicketsTaken() {
         return wicketsTaken;
     }
-    private String playerName;
-    private int runsScored = 0;
 
     public String getPlayerName() {
         return playerName;
@@ -47,15 +50,17 @@ public abstract class Player {
     public int getRunsScored() {
         return runsScored;
     }
+
     public int getBallsFaced() {
         return ballsFaced;
     }
-    private int ballsFaced =0;
+
     public abstract char simulateRun(boolean noBall);
-    public void updateRun(int run)
-    {
-        runsScored+=run;
+
+    public void updateRun(int run) {
+        runsScored += run;
         ballsFaced++;
     }
+
     public abstract String playerType();
 }

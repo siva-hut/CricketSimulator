@@ -1,8 +1,8 @@
-package com.circketApplication.dao.repositories.Impl;
+package com.cricketApplication.dao.repositories.Impl;
 
-import com.circketApplication.cricketGame.Game;
-import com.circketApplication.dao.entities.BallDataDao;
-import com.circketApplication.dao.repositories.BallDataRepository;
+import com.cricketApplication.cricketGame.Game;
+import com.cricketApplication.dao.entities.BallDataDao;
+import com.cricketApplication.dao.repositories.BallDataRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;

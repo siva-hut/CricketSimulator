@@ -1,8 +1,8 @@
-package com.circketApplication.dao.repositories.Impl;
+package com.cricketApplication.dao.repositories.Impl;
 
-import com.circketApplication.cricketGame.player.Player;
-import com.circketApplication.dao.entities.PlayerDao;
-import com.circketApplication.dao.repositories.PlayerRepository;
+import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.dao.entities.PlayerDao;
+import com.cricketApplication.dao.repositories.PlayerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
@@ -19,21 +19,22 @@ public class PlayerRepositoryImpl {
     @Autowired
     @Lazy
     private PlayerRepository playerRepository;
+
     //Updating player, no Threads should do it at the same time, causes dirty reads
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void updatePlayer(Player player, String teamName) {
         PlayerDao playerDao = playerRepository.findById(player.getId()).get();
         playerDao.setTeamName(teamName);
-        playerDao.setBallsBowled(playerDao.getBallsBowled()+player.getOversBowled().getNumberOfBalls());
-        playerDao.setBallsFaced(playerDao.getBallsFaced()+player.getBallsFaced());
-        playerDao.setRunsScored(playerDao.getRunsScored()+player.getRunsScored());
-        playerDao.setRunsGiven(playerDao.getRunsGiven()+player.getRunsGiven());
-        playerDao.setWicketsTaken(playerDao.getWicketsTaken()+player.getWicketsTaken());
+        playerDao.setBallsBowled(playerDao.getBallsBowled() + player.getOversBowled().getNumberOfBalls());
+        playerDao.setBallsFaced(playerDao.getBallsFaced() + player.getBallsFaced());
+        playerDao.setRunsScored(playerDao.getRunsScored() + player.getRunsScored());
+        playerDao.setRunsGiven(playerDao.getRunsGiven() + player.getRunsGiven());
+        playerDao.setWicketsTaken(playerDao.getWicketsTaken() + player.getWicketsTaken());
         playerRepository.save(playerDao);
-
     }
-    public void persistNewPlayer(Player player,String teamName) {
+
+    public void persistNewPlayer(Player player, String teamName) {
         System.out.println(player.getRunsGiven());
         PlayerDao playerDao = PlayerDao.builder().
                 teamName(teamName).

@@ -1,4 +1,4 @@
-package com.circketApplication.dataModels.request;
+package com.cricketApplication.dataModels.request;
 
 import lombok.Getter;
 import lombok.Setter;

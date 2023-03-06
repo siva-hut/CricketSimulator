@@ -1,7 +1,6 @@
-package com.circketApplication.cricketGame.player;
+package com.cricketApplication.cricketGame.player;
 
-import com.circketApplication.cricketGame.util.Overs;
-import com.circketApplication.cricketGame.util.RandomGenerator;
+import com.cricketApplication.cricketGame.util.RandomGenerator;
 
 public class Batsman extends Player {
     public Batsman(String playerName) {
@@ -9,10 +8,8 @@ public class Batsman extends Player {
     }
 
     @Override
-    public char simulateRun(boolean noBall)
-    {
-        if (noBall)
-        {
+    public char simulateRun(boolean noBall) {
+        if (noBall) {
             return RandomGenerator.generateNoBallOutCome();
         }
         int randomNumber = RandomGenerator.random.nextInt(1000);

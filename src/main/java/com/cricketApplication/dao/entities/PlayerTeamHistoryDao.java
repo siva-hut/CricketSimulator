@@ -1,4 +1,4 @@
-package com.circketApplication.dao.entities;
+package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

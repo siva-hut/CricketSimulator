@@ -1,19 +1,16 @@
-package com.circketApplication.dao.repositories.Impl;
+package com.cricketApplication.dao.repositories.Impl;
 
-import com.circketApplication.cricketGame.Game;
-import com.circketApplication.cricketGame.GameBuilder;
-import com.circketApplication.cricketGame.Team;
-import com.circketApplication.cricketGame.player.Player;
-import com.circketApplication.dao.entities.*;
-import com.circketApplication.dao.repositories.*;
+import com.cricketApplication.cricketGame.Game;
+import com.cricketApplication.cricketGame.Team;
+import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.dao.entities.GameDao;
+import com.cricketApplication.dao.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class GameRepositoryImpl {
@@ -35,16 +32,14 @@ public class GameRepositoryImpl {
     @Autowired
     @Lazy
     private TeamStatsRepository teamStatsRepository;
+
     //Create the game and start
     public void persistGameCreation(Game game) {
-        persistGameCreation(game,new Date(),false);
+        persistGameCreation(game, new Date(), false);
     }
-    //Create the game and start in the future
-    public void persistGameCreation(Game game, Date date) {
-        persistGameCreation(game,date,false);
-    }
+
     //Create the game, create or load the teams, create or load the Players
-    private void persistGameCreation(Game game, Date date,boolean gameActive){
+    private void persistGameCreation(Game game, Date date, boolean gameActive) {
         teamRepository.persistAndLoadPlayers(game.getBattingTeam());
         teamRepository.persistAndLoadPlayers(game.getBowlingTeam());
         GameDao gameDao = GameDao.builder()
@@ -56,23 +51,15 @@ public class GameRepositoryImpl {
                 .build();
         gameRepository.save(gameDao);
         game.setId(gameDao.getId());
-        gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBattingTeam(),game.getId());
-        gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBowlingTeam(),game.getId());
+        gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBattingTeam(), game.getId());
+        gamePlayerDetailsRepository.setMatchPlayerDetails(game.getBowlingTeam(), game.getId());
     }
-    private void updatePlayersAndPlayerStatsInTeam(Team team, Long id)
-    {
-        for (Player player: team.getPlayers()){
-            playerRepository.updatePlayer(player, team.getTeamName());
-        }
-        for (Player player: team.getPlayers()){
-            playerStatsRepository.updatePlayerStats(player,id);
-        }
+
+    //Create the game and start in the future
+    public void persistGameCreation(Game game, Date date) {
+        persistGameCreation(game, date, false);
     }
-    private void updatePlayerAndPlayerStats(Game game)
-    {
-        updatePlayersAndPlayerStatsInTeam(game.getBattingTeam(),game.getId());
-        updatePlayersAndPlayerStatsInTeam(game.getBowlingTeam(),game.getId());
-    }
+
     //Saving Player and Team details after the game is over
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
@@ -80,8 +67,22 @@ public class GameRepositoryImpl {
         gameDao.setEndDate(new Timestamp(System.currentTimeMillis()));
         gameDao.setGameActive(false);
         gameRepository.save(gameDao);
-        teamRepository.updateTeam(game.getBattingTeam(),game.getBowlingTeam());
-        teamStatsRepository.updateTeamStats(game.getBowlingTeam(),game.getBattingTeam().getBattingOvers(),game.getId());
-        teamStatsRepository.updateTeamStats(game.getBattingTeam(),game.getBowlingTeam().getBattingOvers(),game.getId());
+        teamRepository.updateTeam(game.getBattingTeam(), game.getBowlingTeam());
+        teamStatsRepository.updateTeamStats(game.getBowlingTeam(), game.getBattingTeam().getBattingOvers(), game.getId());
+        teamStatsRepository.updateTeamStats(game.getBattingTeam(), game.getBowlingTeam().getBattingOvers(), game.getId());
+    }
+
+    private void updatePlayerAndPlayerStats(Game game) {
+        updatePlayersAndPlayerStatsInTeam(game.getBattingTeam(), game.getId());
+        updatePlayersAndPlayerStatsInTeam(game.getBowlingTeam(), game.getId());
+    }
+
+    private void updatePlayersAndPlayerStatsInTeam(Team team, Long id) {
+        for (Player player : team.getPlayers()) {
+            playerRepository.updatePlayer(player, team.getTeamName());
+        }
+        for (Player player : team.getPlayers()) {
+            playerStatsRepository.updatePlayerStats(player, id);
+        }
     }
 }

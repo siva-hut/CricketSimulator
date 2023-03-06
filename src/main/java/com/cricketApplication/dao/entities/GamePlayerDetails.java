@@ -1,4 +1,4 @@
-package com.circketApplication.dao.entities;
+package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,12 +15,12 @@ public class GamePlayerDetails {
     @Column(name = "id", nullable = false)
     private Long id;
     private Long playerId;
-    @ManyToOne(targetEntity=PlayerDao.class)
-    @JoinColumn(name = "playerId", insertable=false, updatable=false)
+    @ManyToOne(targetEntity = PlayerDao.class)
+    @JoinColumn(name = "playerId", insertable = false, updatable = false)
     private PlayerDao playerDao;
     private Long gameId;
-    @ManyToOne(targetEntity=GameDao.class,fetch=FetchType.LAZY)
-    @JoinColumn(name = "gameId", insertable=false, updatable=false)
+    @ManyToOne(targetEntity = GameDao.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "gameId", insertable = false, updatable = false)
     private GameDao gameDao;
     private String teamName;
 

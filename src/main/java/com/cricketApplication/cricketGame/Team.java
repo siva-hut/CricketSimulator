@@ -1,18 +1,15 @@
-package com.circketApplication.cricketGame;
+package com.cricketApplication.cricketGame;
 
-import com.circketApplication.cricketGame.player.Player;
-import com.circketApplication.cricketGame.player.PlayerFactory;
-import com.circketApplication.cricketGame.util.Overs;
-import com.circketApplication.cricketGame.util.RandomGenerator;
-import com.circketApplication.dao.entities.PlayerDao;
-import com.github.javafaker.Faker;
+import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.cricketGame.player.PlayerFactory;
+import com.cricketApplication.cricketGame.util.Overs;
+import com.cricketApplication.dao.entities.PlayerDao;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.Vector;
+
 @Getter
 @Setter
 public class Team {
@@ -27,9 +24,9 @@ public class Team {
     private int wicketsLost = 0;
     private int bowlerIndex = 8;
     private Overs battingOvers;
-    public void createTeamPlayers(List<PlayerDao> playerDaos)
-    {
-        for (PlayerDao playerDao:playerDaos) {
+
+    public void createTeamPlayers(List<PlayerDao> playerDaos) {
+        for (PlayerDao playerDao : playerDaos) {
             Player player = PlayerFactory.createPlayer(playerDao);
             players.add(player);
         }
@@ -38,39 +35,41 @@ public class Team {
         batsmanOffStrike = players.get(1);
         notDoneBatting[1] = true;
     }
+
     public int getScore() {
         return score;
     }
+
     public int getWicketsLost() {
         return wicketsLost;
     }
+
     public String getTeamName() {
         return teamName;
     }
+
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
-    public Player getBatsmanOnStrike()
-    {
+
+    public Player getBatsmanOnStrike() {
         return batsmanOnStrike;
     }
-    public Player getBatsmanOffStrike()
-    {
+
+    public Player getBatsmanOffStrike() {
         return batsmanOffStrike;
     }
-    protected void changeStrike()
-    {
+
+    protected void changeStrike() {
         Player duplicate = batsmanOnStrike;
         batsmanOnStrike = batsmanOffStrike;
         batsmanOffStrike = duplicate;
     }
-    protected void nextBatsman()
-    {
-        int index = players.indexOf(batsmanOnStrike)+1;
-        while(index<notDoneBatting.length)
-        {
-            if(!notDoneBatting[index])
-            {
+
+    protected void nextBatsman() {
+        int index = players.indexOf(batsmanOnStrike) + 1;
+        while (index < notDoneBatting.length) {
+            if (!notDoneBatting[index]) {
                 batsmanOnStrike = players.get(index);
                 notDoneBatting[index] = true;
                 break;
@@ -78,23 +77,23 @@ public class Team {
             index++;
         }
     }
-    protected void increaseWicketLost()
-    {
+
+    protected void increaseWicketLost() {
         wicketsLost++;
     }
-    protected void increaseScore(int run)
-    {
-        score+=run;
+
+    protected void increaseScore(int run) {
+        score += run;
     }
-    public Player getBowler()
-    {
+
+    public Player getBowler() {
         return players.get(bowlerIndex);
     }
-    protected void changeBowler()
-    {
+
+    protected void changeBowler() {
         bowlerIndex++;
-        if(bowlerIndex==11)
-            bowlerIndex=7;
+        if (bowlerIndex == 11)
+            bowlerIndex = 7;
     }
 
 }

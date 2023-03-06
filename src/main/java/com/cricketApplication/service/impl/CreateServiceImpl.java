@@ -1,19 +1,17 @@
-package com.circketApplication.service.impl;
+package com.cricketApplication.service.impl;
 
-import com.circketApplication.cricketGame.GameBuilder;
-import com.circketApplication.cricketGame.player.Player;
-import com.circketApplication.cricketGame.player.PlayerFactory;
-import com.circketApplication.cricketGame.util.RandomGenerator;
-import com.circketApplication.dao.entities.PlayerDao;
-import com.circketApplication.dao.repositories.PlayerRepository;
-import com.circketApplication.dao.repositories.TeamRepository;
-import com.circketApplication.dataModels.request.CreateGameRequest;
-import com.circketApplication.dataModels.request.CreatePlayerRequest;
-import com.circketApplication.dataModels.request.CreateTeamRequest;
-import com.circketApplication.dataModels.response.CreateGameResponse;
-import com.circketApplication.dataModels.response.CreatePlayerResponse;
-import com.circketApplication.service.interfaces.CreateService;
-import com.circketApplication.service.interfaces.GameService;
+import com.cricketApplication.cricketGame.GameBuilder;
+import com.cricketApplication.cricketGame.util.RandomGenerator;
+import com.cricketApplication.dao.entities.PlayerDao;
+import com.cricketApplication.dao.repositories.PlayerRepository;
+import com.cricketApplication.dao.repositories.TeamRepository;
+import com.cricketApplication.dataModels.request.CreateGameRequest;
+import com.cricketApplication.dataModels.request.CreatePlayerRequest;
+import com.cricketApplication.dataModels.request.CreateTeamRequest;
+import com.cricketApplication.dataModels.response.CreateGameResponse;
+import com.cricketApplication.dataModels.response.CreatePlayerResponse;
+import com.cricketApplication.service.interfaces.CreateService;
+import com.cricketApplication.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +28,13 @@ public class CreateServiceImpl implements CreateService {
 
     @Override
     public CreatePlayerResponse createPlayer(CreatePlayerRequest createPlayerRequest) {
+        if (createPlayerRequest.getPlayerType() == null)
+            createPlayerRequest.setPlayerType("s");
         CreatePlayerResponse createPlayerResponse = CreatePlayerResponse.builder().build();
         if (!createPlayerRequest.getPlayerType().equals("Batsman") && !createPlayerRequest.getPlayerType().equals("Bowler")) {
             createPlayerRequest.setPlayerType(RandomGenerator.getRandomGenerator().getRandomPlayer());
         }
-        PlayerDao playerDao =PlayerDao.builder().name(createPlayerRequest.getPlayerName()).
+        PlayerDao playerDao = PlayerDao.builder().name(createPlayerRequest.getPlayerName()).
                 teamName(createPlayerRequest.getTeamName()).
                 playerType(createPlayerRequest.getPlayerType())
                 .build();
@@ -53,7 +53,7 @@ public class CreateServiceImpl implements CreateService {
     @Override
     public String createTeam(CreateTeamRequest createTeamRequest) {
         try {
-            if(teamRepository.findByName(createTeamRequest.getTeamName())!=null)
+            if (teamRepository.findByName(createTeamRequest.getTeamName()) != null)
                 return "Team already Exists";
             teamRepository.persist(createTeamRequest.getTeamName());
             return "Team created successfully";
@@ -70,8 +70,8 @@ public class CreateServiceImpl implements CreateService {
             gameBuilder.setTeam1Name(createGameRequest.getFirstBattingTeamName());
             gameBuilder.setTeam2Name(createGameRequest.getFirstBowlingTeamName());
             gameBuilder.setTotalOvers(createGameRequest.getTotalOvers());
-            if (createGameRequest.startDate!=null && createGameRequest.startDate.after(new Date())) {
-                return scheduleGame(gameBuilder,createGameRequest.startDate);
+            if (createGameRequest.startDate != null && createGameRequest.startDate.after(new Date())) {
+                return scheduleGame(gameBuilder, createGameRequest.startDate);
             } else {
                 return startGame(gameBuilder);
             }
@@ -81,8 +81,8 @@ public class CreateServiceImpl implements CreateService {
         }
     }
 
-    private CreateGameResponse scheduleGame(GameBuilder gameBuilder,Date date) {
-        Long id = gameService.scheduleGame(gameBuilder,date);
+    private CreateGameResponse scheduleGame(GameBuilder gameBuilder, Date date) {
+        Long id = gameService.scheduleGame(gameBuilder, date);
         return CreateGameResponse.builder().
                 status("success").
                 message("Game scheduled successfully").
@@ -97,6 +97,6 @@ public class CreateServiceImpl implements CreateService {
                 message("Game created successfully").
                 gameId(id)
                 .build();
-        }
+    }
 
 }

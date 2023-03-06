@@ -1,4 +1,4 @@
-package com.circketApplication.dao.entities;
+package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,11 +10,10 @@ import java.util.List;
 @Setter
 @Entity
 public class SeriesDao {
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "series")
+    List<GameDao> seriesGames;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="series")
-    List<GameDao> seriesGames;
 }

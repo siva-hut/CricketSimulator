@@ -1,22 +1,33 @@
-package com.circketApplication.service.impl.dataService;
+package com.cricketApplication.service.impl.dataService;
 
-import com.circketApplication.dao.entities.PlayerDao;
-import com.circketApplication.dao.repositories.PlayerRepository;
-import com.circketApplication.dataModels.response.GetPlayerResponse;
-import com.circketApplication.dataModels.response.PlayerResponse;
+import com.cricketApplication.dao.entities.PlayerDao;
+import com.cricketApplication.dao.repositories.PlayerRepository;
+import com.cricketApplication.dataModels.response.GetPlayerResponse;
+import com.cricketApplication.dataModels.response.PlayerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class PlayerDetailService {
     @Autowired
     private PlayerRepository playerRepository;
+
+    public GetPlayerResponse getAllPlayers() {
+        return GetPlayerResponse.builder()
+                .message("Got all the player")
+                .status("success")
+                .playerResponseList(convert(playerRepository.findAll()))
+                .build();
+
+    }
+
     //Converting PlayerDao to PlayerResponse
-    private List<PlayerResponse>convert(List<PlayerDao> playerDaoList){
+    private List<PlayerResponse> convert(List<PlayerDao> playerDaoList) {
         List<PlayerResponse> playerResponseList = new ArrayList<>();
-        for (PlayerDao playerDao:playerDaoList) {
+        for (PlayerDao playerDao : playerDaoList) {
             playerResponseList.add(PlayerResponse.builder()
                     .playerId(playerDao.getId())
                     .ballsBowled(playerDao.getBallsBowled()).ballsFaced(playerDao.getBallsFaced())
@@ -27,15 +38,8 @@ public class PlayerDetailService {
         }
         return playerResponseList;
     }
-    public GetPlayerResponse getAllPlayers(){
-        return GetPlayerResponse.builder()
-                .message("Got all the player")
-                .status("success")
-                .playerResponseList(convert(playerRepository.findAll()))
-                .build();
 
-    }
-    public GetPlayerResponse getPlayer(Long playerId){
+    public GetPlayerResponse getPlayer(Long playerId) {
         try {
             PlayerDao playerDao = playerRepository.findById(playerId).get();
             List<PlayerDao> playerDaoList = new ArrayList<>();
@@ -45,8 +49,7 @@ public class PlayerDetailService {
                     .status("success")
                     .playerResponseList(convert(playerDaoList))
                     .build();
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             return GetPlayerResponse.builder().status("error").message("Could not find the player").build();
         }
     }

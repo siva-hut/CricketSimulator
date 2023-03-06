@@ -1,12 +1,12 @@
-package com.circketApplication.dao.repositories.Impl;
+package com.cricketApplication.dao.repositories.Impl;
 
-import com.circketApplication.cricketGame.Team;
-import com.circketApplication.cricketGame.player.Player;
-import com.circketApplication.cricketGame.util.RandomGenerator;
-import com.circketApplication.dao.entities.PlayerDao;
-import com.circketApplication.dao.entities.TeamDao;
-import com.circketApplication.dao.repositories.PlayerRepository;
-import com.circketApplication.dao.repositories.TeamRepository;
+import com.cricketApplication.cricketGame.Team;
+import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.cricketGame.util.RandomGenerator;
+import com.cricketApplication.dao.entities.PlayerDao;
+import com.cricketApplication.dao.entities.TeamDao;
+import com.cricketApplication.dao.repositories.PlayerRepository;
+import com.cricketApplication.dao.repositories.TeamRepository;
 import com.github.javafaker.Faker;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 @Component
 public class TeamRepositoryImpl {
@@ -27,9 +26,9 @@ public class TeamRepositoryImpl {
     @Autowired
     @Lazy
     private PlayerRepository playerRepository;
+
     public void persistAndLoadPlayers(Team team) {
-        if(teamRepository.findByName(team.getTeamName())==null)
-        {
+        if (teamRepository.findByName(team.getTeamName()) == null) {
             TeamDao teamDao = TeamDao.builder()
                     .name(team.getTeamName())
                     .gamesLost(0)
@@ -37,15 +36,16 @@ public class TeamRepositoryImpl {
                     .gamesDrew(0).build();
             teamRepository.save(teamDao);
         }
-        loadPlayers(teamRepository.findByName(team.getTeamName()).getPlayers(),team);
+        loadPlayers(teamRepository.findByName(team.getTeamName()).getPlayers(), team);
         persistPlayersInTeam(team);
     }
+
     //Loads players from DB or creates if not enough players
-    private void loadPlayers(List<PlayerDao> playerDaos,Team team){
+    private void loadPlayers(List<PlayerDao> playerDaos, Team team) {
         Faker faker = new Faker();
-        if(playerDaos==null)
+        if (playerDaos == null)
             playerDaos = new ArrayList<>();
-        while (playerDaos.size()<11) {
+        while (playerDaos.size() < 11) {
             playerDaos.add(PlayerDao.builder().
                     name(faker.name().name()).
                     teamName(team.getTeamName()).
@@ -53,13 +53,14 @@ public class TeamRepositoryImpl {
         }
         team.createTeamPlayers(playerDaos);
     }
-    private void persistPlayersInTeam(Team team)
-    {
-        for (Player player: team.getPlayers()) {
-            if(player.getId()==null)
+
+    private void persistPlayersInTeam(Team team) {
+        for (Player player : team.getPlayers()) {
+            if (player.getId() == null)
                 playerRepository.persistNewPlayer(player, team.getTeamName());
         }
     }
+
     public void persist(String teamName) {
         teamRepository.save(TeamDao.builder().name(teamName).build());
     }
@@ -68,21 +69,18 @@ public class TeamRepositoryImpl {
     //Lock type - pessimistic To prevent Dirty reads
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    public void updateTeam(Team team1,Team team2)
-    {
+    public void updateTeam(Team team1, Team team2) {
         TeamDao teamDao1 = teamRepository.findByName(team1.getTeamName());
         TeamDao teamDao2 = teamRepository.findByName(team2.getTeamName());
-        if(team1.getScore()>team2.getScore()) {
-            teamDao1.setGamesWon(teamDao1.getGamesWon()+1);
-            teamDao2.setGamesLost(teamDao2.getGamesLost()+1);
-        }
-        else if(team1.getScore()<team2.getScore()){
-            teamDao1.setGamesLost(teamDao1.getGamesLost()+1);
-            teamDao2.setGamesWon(teamDao2.getGamesWon()+1);
-        }
-        else{
-            teamDao1.setGamesDrew(teamDao1.getGamesDrew()+1);
-            teamDao2.setGamesDrew(teamDao2.getGamesDrew()+1);
+        if (team1.getScore() > team2.getScore()) {
+            teamDao1.setGamesWon(teamDao1.getGamesWon() + 1);
+            teamDao2.setGamesLost(teamDao2.getGamesLost() + 1);
+        } else if (team1.getScore() < team2.getScore()) {
+            teamDao1.setGamesLost(teamDao1.getGamesLost() + 1);
+            teamDao2.setGamesWon(teamDao2.getGamesWon() + 1);
+        } else {
+            teamDao1.setGamesDrew(teamDao1.getGamesDrew() + 1);
+            teamDao2.setGamesDrew(teamDao2.getGamesDrew() + 1);
         }
         teamRepository.save(teamDao1);
         teamRepository.save(teamDao2);

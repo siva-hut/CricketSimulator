@@ -1,4 +1,4 @@
-package com.circketApplication.dao.entities;
+package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlayerStatsCompositeKey {
-    @Column(name="GameId")
+    @Column(name = "GameId")
     private Long gameId;
     @Column(name = "PlayerId")
     private Long playerId;

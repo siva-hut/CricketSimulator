@@ -1,9 +1,8 @@
-package com.circketApplication.dao.repositories;
+package com.cricketApplication.dao.repositories;
 
-import com.circketApplication.cricketGame.Team;
-import com.circketApplication.cricketGame.util.Overs;
-import com.circketApplication.dao.entities.TeamStatsCompositeKey;
-import com.circketApplication.dao.entities.TeamStatsDao;
+import com.cricketApplication.cricketGame.Team;
+import com.cricketApplication.cricketGame.util.Overs;
+import com.cricketApplication.dao.entities.TeamStatsDao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.circketApplication.Controller;
+package com.cricketApplication.Controller;
 
-import com.circketApplication.dataModels.response.GetPlayerResponse;
-import com.circketApplication.service.impl.dataService.PlayerDetailService;
+import com.cricketApplication.dataModels.response.GetPlayerResponse;
+import com.cricketApplication.service.impl.dataService.PlayerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlayerController {
     @Autowired
     private PlayerDetailService playerDetailService;
+
     @GetMapping("/getAllPlayers")
     public GetPlayerResponse getAllPlayers() {
         return playerDetailService.getAllPlayers();
     }
+
     @GetMapping("/getPlayer")
-    public GetPlayerResponse getPlayerDetails(@RequestParam Long playerId){
+    public GetPlayerResponse getPlayerDetails(@RequestParam Long playerId) {
         return playerDetailService.getPlayer(playerId);
     }
 }

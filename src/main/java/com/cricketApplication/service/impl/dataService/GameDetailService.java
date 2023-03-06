@@ -1,11 +1,11 @@
-package com.circketApplication.service.impl.dataService;
+package com.cricketApplication.service.impl.dataService;
 
-import com.circketApplication.dao.entities.GameDao;
-import com.circketApplication.dao.entities.TeamStatsDao;
-import com.circketApplication.dao.repositories.GameRepository;
-import com.circketApplication.dataModels.response.GameDetailResponse;
-import com.circketApplication.dataModels.response.GameResponse;
-import com.circketApplication.dataModels.response.GetAllGameResponse;
+import com.cricketApplication.dao.entities.GameDao;
+import com.cricketApplication.dao.entities.TeamStatsDao;
+import com.cricketApplication.dao.repositories.GameRepository;
+import com.cricketApplication.dataModels.response.GameDetailResponse;
+import com.cricketApplication.dataModels.response.GameResponse;
+import com.cricketApplication.dataModels.response.GetAllGameResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,17 @@ public class GameDetailService {
     @Autowired
     private GameRepository gameRepository;
 
+    public GetAllGameResponse getAllGames() {
+        List<GameDao> gameDaoList = gameRepository.findAll();
+        List<GameResponse> gameResponseList = convert(gameDaoList);
+        return GetAllGameResponse.builder().gameList(gameResponseList)
+                .status("success").message("List of games").build();
+    }
+
     //Convert GameDao to Game Response
-    private List<GameResponse> convert(List<GameDao> gameDaoList)
-    {
+    private List<GameResponse> convert(List<GameDao> gameDaoList) {
         List<GameResponse> gameResponseList = new ArrayList<>();
-        for (GameDao gameDao:gameDaoList) {
+        for (GameDao gameDao : gameDaoList) {
             gameResponseList.add(
                     GameResponse.builder().
                             gameId(gameDao.getId()).startTime(gameDao.getStartDate().toString()).
@@ -33,29 +39,24 @@ public class GameDetailService {
         }
         return gameResponseList;
     }
-    public GetAllGameResponse getAllGames(){
-        List<GameDao> gameDaoList = gameRepository.findAll();
-        List<GameResponse> gameResponseList= convert(gameDaoList);
-        return GetAllGameResponse.builder().gameList(gameResponseList)
-                .status("success").message("List of games").build();
-    }
-    public GetAllGameResponse getAllActiveGames()
-    {
+
+    public GetAllGameResponse getAllActiveGames() {
         List<GameDao> gameDaoList = gameRepository.findByGameActive(true);
-        List<GameResponse> gameResponseList= convert(gameDaoList);
+        List<GameResponse> gameResponseList = convert(gameDaoList);
         return GetAllGameResponse.builder().gameList(gameResponseList)
                 .status("success").message("List of games").build();
     }
-    public GameDetailResponse getGameDetails(Long gameId){
+
+    public GameDetailResponse getGameDetails(Long gameId) {
         GameDao gameDao = gameRepository.findById(gameId).get();
         List<TeamStatsDao> teamStatsDaoList = gameDao.getTeamStatsDaos();
         TeamStatsDao team1 = teamStatsDaoList.get(0);
         TeamStatsDao team2 = teamStatsDaoList.get(1);
-        return createGameDetailResponse(gameDao,team1,team2);
+        return createGameDetailResponse(gameDao, team1, team2);
     }
 
     //Building detailed game response
-    private GameDetailResponse createGameDetailResponse(GameDao gameDao,TeamStatsDao team1,TeamStatsDao team2){
+    private GameDetailResponse createGameDetailResponse(GameDao gameDao, TeamStatsDao team1, TeamStatsDao team2) {
         return GameDetailResponse.builder().gameId(gameDao.getId())
                 .status("success")
                 .message("Game results")

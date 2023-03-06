@@ -1,2 +1,4 @@
-package com.cricketApplication.serviceTest;public class GameServiceTest {
+package com.cricketApplication.serviceTest;
+
+public class GameServiceTest {
 }

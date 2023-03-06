@@ -1,4 +1,4 @@
-package com.circketApplication.dao.entities;
+package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +15,10 @@ public class PlayerDao {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne(targetEntity=TeamDao.class,fetch=FetchType.LAZY)
-    @JoinColumn(name = "TeamName", insertable=false, updatable=false)
+    @ManyToOne(targetEntity = TeamDao.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "TeamName", insertable = false, updatable = false)
     private TeamDao team;
-    @Column(name="TeamName")
+    @Column(name = "TeamName")
     private String teamName;
     @Column(name = "PlayerName")
     private String name;
