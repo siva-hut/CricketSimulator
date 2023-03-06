@@ -10,6 +10,7 @@ public class PlayerFactory {
         } else {
             player = getBatsman(playerDao.getName());
         }
+        player.setId(playerDao.getId());
         return player;
     }
 
