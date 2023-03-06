@@ -5,6 +5,7 @@ import com.cricketApplication.cricketGame.player.Player;
 import com.cricketApplication.cricketGame.util.RandomGenerator;
 import com.cricketApplication.dao.entities.PlayerDao;
 import com.cricketApplication.dao.entities.TeamDao;
+import com.cricketApplication.dao.repositories.PlayerRepository;
 import com.cricketApplication.dao.repositories.TeamRepository;
 import com.github.javafaker.Faker;
 import jakarta.persistence.LockModeType;
@@ -20,6 +21,8 @@ import java.util.List;
 public class TeamPersistence {
     @Autowired
     private TeamRepository teamRepository;
+    @Autowired
+    private PlayerRepository playerRepository;
     @Autowired
     private PlayerPersistence playerPersistence;
 
@@ -42,10 +45,13 @@ public class TeamPersistence {
         if (playerDaos == null)
             playerDaos = new ArrayList<>();
         while (playerDaos.size() < 11) {
-            playerDaos.add(PlayerDao.builder().
+            PlayerDao playerDao = PlayerDao.builder().
                     name(faker.name().name()).
                     teamName(team.getTeamName()).
-                    playerType(RandomGenerator.getRandomGenerator().getRandomPlayer()).build());
+                    playerType(RandomGenerator.getRandomGenerator().getRandomPlayer()).build();
+            playerRepository.save(playerDao);
+            playerDaos.add(playerDao);
+
         }
         team.createTeamPlayers(playerDaos);
     }

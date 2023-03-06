@@ -5,8 +5,11 @@ import com.cricketApplication.cricketGame.Team;
 import com.cricketApplication.cricketGame.player.Player;
 import com.cricketApplication.dao.entities.GameDao;
 import com.cricketApplication.dao.repositories.*;
+import jakarta.persistence.LockModeType;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -39,7 +42,7 @@ public class GamePersistence {
     }
     //Create the game and start
     public void persistGameCreation(Game game) {
-        persistGameCreation(game, new Date(), false);
+        persistGameCreation(game, new Date(), true);
     }
 
     //Create the game, create or load the teams, create or load the Players
@@ -65,6 +68,8 @@ public class GamePersistence {
     }
 
     //Saving Player and Team details after the game is over
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
         GameDao gameDao = gameRepository.findById(game.getId()).get();
