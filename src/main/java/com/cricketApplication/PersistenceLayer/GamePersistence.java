@@ -3,6 +3,7 @@ package com.cricketApplication.PersistenceLayer;
 import com.cricketApplication.cricketGame.Game;
 import com.cricketApplication.cricketGame.Team;
 import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.dao.EntityBuilder;
 import com.cricketApplication.dao.entities.GameDao;
 import com.cricketApplication.dao.repositories.*;
 import jakarta.persistence.LockModeType;
@@ -45,35 +46,29 @@ public class GamePersistence {
         persistGameCreation(game, new Date(), true);
     }
 
+    //Create the game and start in the future
+    public void persistGameCreation(Game game, Date date) {
+        persistGameCreation(game, date, false);
+    }
+
     //Create the game, create or load the teams, create or load the Players
     private void persistGameCreation(Game game, Date date, boolean gameActive) {
         teamPersistence.persistAndLoadPlayers(game.getBattingTeam());
         teamPersistence.persistAndLoadPlayers(game.getBowlingTeam());
-        GameDao gameDao = GameDao.builder()
-                .firstBattingTeamName(game.getBattingTeam().getTeamName())
-                .firstBowlingTeamName(game.getBowlingTeam().getTeamName())
-                .totalOvers(game.getOvers().getTotalOvers())
-                .startDate(new Timestamp(date.getTime()))
-                .gameActive(gameActive)
-                .build();
+        GameDao gameDao = EntityBuilder.buildGameDao(game,date,gameActive);
         gameRepository.save(gameDao);
         game.setId(gameDao.getId());
         gamePlayerDetailsPersistence.setMatchPlayerDetails(game.getBattingTeam(), game.getId());
         gamePlayerDetailsPersistence.setMatchPlayerDetails(game.getBowlingTeam(), game.getId());
     }
 
-    //Create the game and start in the future
-    public void persistGameCreation(Game game, Date date) {
-        persistGameCreation(game, date, false);
-    }
-
     //Saving Player and Team details after the game is over
-    @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
         GameDao gameDao = gameRepository.findById(game.getId()).get();
-        gameDao.setEndDate(new Timestamp(System.currentTimeMillis()));
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+        gameDao.setEndDate(currentDate);
         gameDao.setGameActive(false);
         gameRepository.save(gameDao);
         teamPersistence.updateTeam(game.getBattingTeam(), game.getBowlingTeam());

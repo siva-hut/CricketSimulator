@@ -1,12 +1,18 @@
 package com.cricketApplication.cricketGame.util;
 
+import com.github.javafaker.Faker;
+
 import java.util.Random;
 
 public class RandomGenerator {
     public static Random random = new Random();
     private static RandomGenerator randomGenerator;
 
-    ;
+    private static Faker faker = new Faker();
+
+    public static String getRandomName(){
+        return faker.name().name();
+    }
 
     private RandomGenerator() {
     }
@@ -35,7 +41,7 @@ public class RandomGenerator {
         return arr[random.nextInt(arr.length)];
     }
 
-    public String getRandomPlayer() {
+    public static String getRandomPlayerType() {
         int number = random.nextInt(2);
         if (number == 1)
             return "Batsman";

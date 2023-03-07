@@ -15,7 +15,7 @@ import java.util.List;
 public class Team {
     private Long id;
     private boolean[] notDoneBatting = new boolean[11];
-    private ArrayList<Player> players = new ArrayList<>(11);
+    private List<Player> players = new ArrayList<>(11);
     private Player batsmanOnStrike;
     private Player batsmanOffStrike;
     private String teamName;
@@ -25,11 +25,8 @@ public class Team {
     private int bowlerIndex = 8;
     private Overs battingOvers;
 
-    public void createTeamPlayers(List<PlayerDao> playerDaos) {
-        for (PlayerDao playerDao : playerDaos) {
-            Player player = PlayerFactory.createPlayer(playerDao);
-            players.add(player);
-        }
+    public void createTeamPlayers(List<Player> players) {
+        this.players = players;
         batsmanOnStrike = players.get(0);
         notDoneBatting[0] = true;
         batsmanOffStrike = players.get(1);

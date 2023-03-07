@@ -28,5 +28,4 @@ public class BallDataDao {
     @Column(name = "batsmanId")
     private Long batsmanId;
     private char ballOutCome;
-    private int teamScore;
 }

@@ -1,6 +1,7 @@
 package com.cricketApplication.PersistenceLayer;
 
 import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.dao.elasticSearchRepository.ElasticPlayerRepository;
 import com.cricketApplication.dao.entities.PlayerDao;
 import com.cricketApplication.dao.repositories.PlayerRepository;
 import jakarta.persistence.LockModeType;
@@ -15,6 +16,9 @@ public class PlayerPersistence {
     @Autowired
     @Lazy
     private PlayerRepository playerRepository;
+    @Autowired
+    @Lazy
+    private ElasticPlayerRepository elasticPlayerRepository;
 
     //Updating player, no Threads should do it at the same time, causes dirty reads
     @Transactional
@@ -27,21 +31,14 @@ public class PlayerPersistence {
         playerDao.setRunsScored(playerDao.getRunsScored() + player.getRunsScored());
         playerDao.setRunsGiven(playerDao.getRunsGiven() + player.getRunsGiven());
         playerDao.setWicketsTaken(playerDao.getWicketsTaken() + player.getWicketsTaken());
-        playerRepository.save(playerDao);
+        save(playerDao);
     }
-
-    public void persistNewPlayer(Player player, String teamName) {
-        System.out.println(player.getRunsGiven());
-        PlayerDao playerDao = PlayerDao.builder().
-                teamName(teamName).
-                ballsBowled(player.oversBowled.getNumberOfBalls()).
-                ballsFaced(player.getBallsFaced()).
-                runsScored(player.getRunsScored()).
-                runsGiven(player.getRunsGiven()).
-                wicketsTaken(player.getWicketsTaken()).
-                name(player.getPlayerName()).
-                playerType(player.playerType()).build();
+    public PlayerDao save(PlayerDao playerDao){
+        elasticPlayerRepository.findAll().forEach(playerDao1 -> {
+            System.out.println(playerDao1.getId());
+        });
         playerRepository.save(playerDao);
-        player.setId(playerDao.getId());
+        elasticPlayerRepository.save(playerDao);
+        return playerDao;
     }
 }

@@ -12,4 +12,12 @@ public class CreateGameResponse {
     String message;
     Long gameId;
     int totalOvers;
+
+    public static CreateGameResponse createGameResponse(String message,Long gameId){
+        return CreateGameResponse.builder().
+                status("success").
+                message(message).
+                gameId(gameId)
+                .build();
+    }
 }

@@ -1,7 +1,7 @@
 package com.cricketApplication.Controller;
 
 import com.cricketApplication.dataModels.response.GetAllTeamResponse;
-import com.cricketApplication.dataModels.response.TeamDetailResponse;
+import com.cricketApplication.dataModels.response.GetTeamDetailResponse;
 import com.cricketApplication.service.impl.dataService.TeamDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class TeamController {
     }
 
     @GetMapping("/getTeamDetails")
-    public TeamDetailResponse getTeamDetails(@RequestParam String teamName) {
+    public GetTeamDetailResponse getTeamDetails(@RequestParam String teamName) {
         return teamDetailService.getTeamDetails(teamName);
     }
 }

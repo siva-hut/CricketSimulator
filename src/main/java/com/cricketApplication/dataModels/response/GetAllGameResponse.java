@@ -13,4 +13,12 @@ public class GetAllGameResponse {
     String status;
     String message;
     List<GameResponse> gameList;
+
+    public static GetAllGameResponse getAllGameResponse(List<GameResponse>gameResponseList){
+        return GetAllGameResponse.builder()
+                .gameList(gameResponseList)
+                .status("success")
+                .message("List of games")
+                .build();
+    }
 }

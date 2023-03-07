@@ -1,6 +1,8 @@
 package com.cricketApplication.service.impl;
 
+import com.cricketApplication.PersistenceLayer.PlayerPersistence;
 import com.cricketApplication.PersistenceLayer.TeamPersistence;
+import com.cricketApplication.cricketGame.Game;
 import com.cricketApplication.cricketGame.GameBuilder;
 import com.cricketApplication.cricketGame.util.RandomGenerator;
 import com.cricketApplication.dao.entities.PlayerDao;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Random;
 
 @Service
 public class CreateServiceImpl implements CreateService {
@@ -25,39 +28,32 @@ public class CreateServiceImpl implements CreateService {
     @Autowired
     private TeamPersistence teamPersistence;
     @Autowired
-    private PlayerRepository playerRepository;
+    private PlayerPersistence playerPersistence;
     @Autowired
     private GameService gameService;
 
-    private boolean validPlayerType(CreatePlayerRequest createPlayerRequest) {
+    private boolean isNotValidPlayerType(CreatePlayerRequest createPlayerRequest) {
         if (createPlayerRequest.getPlayerType() == null) {
             return true;
         }
-        if (!createPlayerRequest.getPlayerType().equals("Batsman") && !createPlayerRequest.getPlayerType().equals("Bowler")) {
-            return true;
-        }
-        return false;
+        boolean condition1 = !createPlayerRequest.getPlayerType().equals("Batsman");
+        boolean condition2 = !createPlayerRequest.getPlayerType().equals("Bowler");
+        return condition1 && condition2;
     }
-
     @Override
     public CreatePlayerResponse createPlayer(CreatePlayerRequest createPlayerRequest) {
 
-
-        CreatePlayerResponse createPlayerResponse = CreatePlayerResponse.builder().build();
-
-        if (validPlayerType(createPlayerRequest)) {
-            createPlayerRequest.setPlayerType(RandomGenerator.getRandomGenerator().getRandomPlayer());
+        if (isNotValidPlayerType(createPlayerRequest)) {
+            String randomPlayerType = RandomGenerator.getRandomPlayerType();
+            createPlayerRequest.setPlayerType(randomPlayerType);
         }
 
         PlayerDao playerDao = PlayerDao.builder().name(createPlayerRequest.getPlayerName()).
                 teamName(createPlayerRequest.getTeamName()).
                 playerType(createPlayerRequest.getPlayerType())
                 .build();
-        playerRepository.save(playerDao);
-        createPlayerResponse.setStatus("success");
-        createPlayerResponse.setMessage("Player created successfully");
-        createPlayerResponse.setPlayerId(playerDao.getId());
-        return createPlayerResponse;
+        playerPersistence.save(playerDao);
+        return CreatePlayerResponse.createPlayerResponse(playerDao.getId());
     }
 
     @Override
@@ -67,36 +63,37 @@ public class CreateServiceImpl implements CreateService {
         teamPersistence.persist(createTeamRequest.getTeamName());
         return "Team created successfully";
     }
+    private GameBuilder buildGame(CreateGameRequest createGameRequest){
+        String team1Name = createGameRequest.getFirstBattingTeamName();
+        String team2Name = createGameRequest.getFirstBowlingTeamName();
+        int totalOvers = createGameRequest.getTotalOvers();
+        return new GameBuilder(team1Name,team2Name,totalOvers);
+    }
+    private boolean startDateIsInFuture(Date startDate){
+        if(startDate == null)
+            return false;
+        return startDate.after(new Date());
 
+    }
     @Override
     public CreateGameResponse createGame(CreateGameRequest createGameRequest) {
-        GameBuilder gameBuilder = new GameBuilder();
-        gameBuilder.setTeam1Name(createGameRequest.getFirstBattingTeamName());
-        gameBuilder.setTeam2Name(createGameRequest.getFirstBowlingTeamName());
-        gameBuilder.setTotalOvers(createGameRequest.getTotalOvers());
-        if (createGameRequest.startDate != null && createGameRequest.startDate.after(new Date())) {
-            return scheduleGame(gameBuilder, createGameRequest.startDate);
-        } else {
-            return startGame(gameBuilder);
+        GameBuilder gameBuilder = buildGame(createGameRequest);
+        if(startDateIsInFuture(createGameRequest.startDate)){
+            return scheduleGame(gameBuilder,createGameRequest.startDate);
         }
+        return startGame(gameBuilder);
     }
 
     private CreateGameResponse scheduleGame(GameBuilder gameBuilder, Date date) {
-        Long id = gameService.scheduleGame(gameBuilder, date);
-        return CreateGameResponse.builder().
-                status("success").
-                message("Game scheduled successfully").
-                gameId(id)
-                .build();
+        Long gameId = gameService.scheduleGame(gameBuilder, date);
+        String SCHEDULED_GAME = "Game scheduled successfully";
+        return CreateGameResponse.createGameResponse(SCHEDULED_GAME,gameId);
     }
 
     private CreateGameResponse startGame(GameBuilder gameBuilder) {
-        Long id = gameService.createGame(gameBuilder);
-        return CreateGameResponse.builder().
-                status("success").
-                message("Game created successfully").
-                gameId(id)
-                .build();
+        Long gameId = gameService.createGame(gameBuilder);
+        String CREATED_GAME = "Game Created successfully";
+        return CreateGameResponse.createGameResponse(CREATED_GAME,gameId);
     }
 
 }

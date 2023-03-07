@@ -12,4 +12,12 @@ public class CreatePlayerResponse {
     String message;
     Long playerId;
 
+    public static CreatePlayerResponse createPlayerResponse(Long playerId){
+        return CreatePlayerResponse.builder()
+                .status("success")
+                .message("Created Player")
+                .playerId(playerId)
+                .build();
+    }
+
 }

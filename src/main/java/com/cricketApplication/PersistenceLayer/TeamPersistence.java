@@ -2,7 +2,9 @@ package com.cricketApplication.PersistenceLayer;
 
 import com.cricketApplication.cricketGame.Team;
 import com.cricketApplication.cricketGame.player.Player;
+import com.cricketApplication.cricketGame.player.PlayerFactory;
 import com.cricketApplication.cricketGame.util.RandomGenerator;
+import com.cricketApplication.dao.EntityBuilder;
 import com.cricketApplication.dao.entities.PlayerDao;
 import com.cricketApplication.dao.entities.TeamDao;
 import com.cricketApplication.dao.repositories.PlayerRepository;
@@ -22,49 +24,35 @@ public class TeamPersistence {
     @Autowired
     private TeamRepository teamRepository;
     @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
     private PlayerPersistence playerPersistence;
 
     public void persistAndLoadPlayers(Team team) {
         if (teamRepository.findByName(team.getTeamName()) == null) {
-            TeamDao teamDao = TeamDao.builder()
-                    .name(team.getTeamName())
-                    .gamesLost(0)
-                    .gamesWon(0)
-                    .gamesDrew(0).build();
-            teamRepository.save(teamDao);
+            persist(team.getTeamName());
         }
         loadPlayers(teamRepository.findByName(team.getTeamName()).getPlayers(), team);
-        persistPlayersInTeam(team);
     }
-
     //Loads players from DB or creates if not enough players
     private void loadPlayers(List<PlayerDao> playerDaos, Team team) {
-        Faker faker = new Faker();
         if (playerDaos == null)
+        {
             playerDaos = new ArrayList<>();
+        }
+
         while (playerDaos.size() < 11) {
-            PlayerDao playerDao = PlayerDao.builder().
-                    name(faker.name().name()).
-                    teamName(team.getTeamName()).
-                    playerType(RandomGenerator.getRandomGenerator().getRandomPlayer()).build();
-            playerRepository.save(playerDao);
+            String playerName = RandomGenerator.getRandomName();
+            String playerType = RandomGenerator.getRandomPlayerType();
+            PlayerDao playerDao = EntityBuilder.buildPlayerDao(playerName,playerType,team.getTeamName());
+            playerPersistence.save(playerDao);
             playerDaos.add(playerDao);
-
         }
-        team.createTeamPlayers(playerDaos);
-    }
 
-    private void persistPlayersInTeam(Team team) {
-        for (Player player : team.getPlayers()) {
-            if (player.getId() == null)
-                playerPersistence.persistNewPlayer(player, team.getTeamName());
-        }
+        List<Player> playerList = PlayerFactory.createPlayers(playerDaos);
+        team.createTeamPlayers(playerList);
     }
 
     public void persist(String teamName) {
-        teamRepository.save(TeamDao.builder().name(teamName).build());
+        teamRepository.save(EntityBuilder.buildTeamDao(teamName));
     }
 
     //Updating Team wins and losses

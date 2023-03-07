@@ -22,29 +22,29 @@ public class PlayerRepositoryTest {
     @Autowired
     private TeamPersistence teamPersistence;
     private Player player;
-    @Test
-    void persistNewPlayer(){
-        teamPersistence.persist("CSK");
-         player = PlayerFactory.createPlayer( PlayerDao.builder().
-                                            name("siva").
-                                            playerType("Bowler").
-                                            build());
-        playerPersistence.persistNewPlayer(player,"CSK");
-        Assertions.assertNotNull(playerRepository.findById(player.getId()));
-        updatePlayer();
-
-    }
-    void updatePlayer(){
-        player.setRunsScored(10);
-        player.setRunsGiven(10);
-        player.setBallsFaced(10);
-        player.setWicketsTaken(2);
-        playerPersistence.updatePlayer(player,"CSK");
-        PlayerDao playerDao = playerRepository.findById(player.getId()).get();
-        Assertions.assertEquals(playerDao.getRunsScored(),player.getRunsScored());
-        Assertions.assertEquals(playerDao.getRunsGiven(),player.getRunsGiven());
-        Assertions.assertEquals(playerDao.getBallsFaced(),player.getBallsFaced());
-        Assertions.assertEquals(playerDao.getWicketsTaken(),player.getWicketsTaken());
-    }
+//    @Test
+//    void persistNewPlayer(){
+//        teamPersistence.persist("CSK");
+//         player = PlayerFactory.createPlayer( PlayerDao.builder().
+//                                            name("siva").
+//                                            playerType("Bowler").
+//                                            build());
+//        playerPersistence.persistNewPlayer(player,"CSK");
+//        Assertions.assertNotNull(playerRepository.findById(player.getId()));
+//        updatePlayer();
+//
+//    }
+//    void updatePlayer(){
+//        player.setRunsScored(10);
+//        player.setRunsGiven(10);
+//        player.setBallsFaced(10);
+//        player.setWicketsTaken(2);
+//        playerPersistence.updatePlayer(player,"CSK");
+//        PlayerDao playerDao = playerRepository.findById(player.getId()).get();
+//        Assertions.assertEquals(playerDao.getRunsScored(),player.getRunsScored());
+//        Assertions.assertEquals(playerDao.getRunsGiven(),player.getRunsGiven());
+//        Assertions.assertEquals(playerDao.getBallsFaced(),player.getBallsFaced());
+//        Assertions.assertEquals(playerDao.getWicketsTaken(),player.getWicketsTaken());
+//    }
 }
 

@@ -42,4 +42,9 @@ public class GameBuilder {
         team.setTeamName(teamName);
         return team;
     }
+    public GameBuilder(String team1Name,String team2Name,int totalOvers){
+        setTeam1Name(team1Name);
+        setTeam2Name(team2Name);
+        setTotalOvers(totalOvers);
+    }
 }

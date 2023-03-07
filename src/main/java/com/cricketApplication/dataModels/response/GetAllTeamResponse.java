@@ -13,4 +13,10 @@ public class GetAllTeamResponse {
     String status;
     String message;
     List<String> teamNames;
+    public static GetAllTeamResponse getAllTeamResponse(List<String> teamNames){
+        return GetAllTeamResponse.builder()
+                .status("success").message("List of teams")
+                .teamNames(teamNames)
+                .build();
+    }
 }

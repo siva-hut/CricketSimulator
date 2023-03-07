@@ -1,12 +1,14 @@
 package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "playerstats")
 public class PlayerStatsDao {
     @EmbeddedId

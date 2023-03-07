@@ -1,5 +1,6 @@
 package com.cricketApplication.Controller;
 
+import com.cricketApplication.dataModels.response.GetAllPlayerResponse;
 import com.cricketApplication.dataModels.response.GetPlayerResponse;
 import com.cricketApplication.service.impl.dataService.PlayerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class PlayerController {
     private PlayerDetailService playerDetailService;
 
     @GetMapping("/getAllPlayers")
-    public GetPlayerResponse getAllPlayers() {
+    public GetAllPlayerResponse getAllPlayers() {
         return playerDetailService.getAllPlayers();
     }
 
@@ -23,4 +24,5 @@ public class PlayerController {
     public GetPlayerResponse getPlayerDetails(@RequestParam Long playerId) {
         return playerDetailService.getPlayer(playerId);
     }
+
 }

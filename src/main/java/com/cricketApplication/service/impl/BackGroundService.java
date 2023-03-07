@@ -20,7 +20,8 @@ public class BackGroundService {
     //Runs once everytime the application starts
     @EventListener(ApplicationReadyEvent.class)
     public void startPastGames(){
-        List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThan(new Timestamp(System.currentTimeMillis()));
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+        List<GameDao> gameDaoList = gameRepository.findByEndDateIsNullAndStartDateLessThan(currentDate);
         for (GameDao gameDao:gameDaoList) {
             gameService.resumeGame(gameDao);
         }
@@ -28,8 +29,9 @@ public class BackGroundService {
     //Runs every second
     @Scheduled(fixedRate=1000)
     public void StartFutureGames(){
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
         List<GameDao> gameDaoList = gameRepository.
-                findByEndDateIsNullAndStartDateLessThanAndGameActive(new Timestamp(System.currentTimeMillis()),false);
+                findByEndDateIsNullAndStartDateLessThanAndGameActive(currentDate,false);
         for (GameDao gameDao:gameDaoList) {
             gameService.resumeGame(gameDao);
         }
