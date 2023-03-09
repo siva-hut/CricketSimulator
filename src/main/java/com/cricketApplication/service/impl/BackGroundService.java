@@ -27,13 +27,13 @@ public class BackGroundService {
         }
     }
     //Runs every second
-//    @Scheduled(fixedRate=1000)
-//    public void StartFutureGames(){
-//        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
-//        List<GameDao> gameDaoList = gameRepository.
-//                findByEndDateIsNullAndStartDateLessThanAndGameActive(currentDate,false);
-//        for (GameDao gameDao:gameDaoList) {
-//            gameService.resumeGame(gameDao);
-//        }
-//    }
+    @Scheduled(fixedRate=1000)
+    public void StartFutureGames(){
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+        List<GameDao> gameDaoList = gameRepository.
+                findByEndDateIsNullAndStartDateLessThanAndGameActive(currentDate,false);
+        for (GameDao gameDao:gameDaoList) {
+            gameService.resumeGame(gameDao);
+        }
+    }
 }

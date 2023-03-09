@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Getter
 @Setter
 @Table(name = "TeamStats")
-@Document(indexName = "cricket")
+@Document(indexName = "team_stats")
 public class TeamStatsDao {
     @org.springframework.data.annotation.Id
     @Id

@@ -17,14 +17,7 @@ public class GetAllGameResponse {
     String message;
     List<GetGameResponse> gameList;
 
-    public static GetAllGameResponse getAllGameResponse(List<GetGameResponse>gameResponseList){
-        return GetAllGameResponse.builder()
-                .gameList(gameResponseList)
-                .status("success")
-                .message("List of games")
-                .build();
-    }
-    public static GetAllGameResponse getAllGameResponseFromGameDao(List<GameDao>gameResponseList){
+    public static GetAllGameResponse getAllGameResponse(List<GameDao>gameResponseList){
         return GetAllGameResponse.builder()
                 .gameList(convert(gameResponseList))
                 .status("success")

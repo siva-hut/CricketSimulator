@@ -60,14 +60,15 @@ public class GamePersistence {
         game.setId(gameDao.getId());
         gamePlayerDetailsPersistence.setMatchPlayerDetails(game.getBattingTeam(), game.getId());
         gamePlayerDetailsPersistence.setMatchPlayerDetails(game.getBowlingTeam(), game.getId());
+        log.debug("gameId: "+game.getId()+" game persisted");
     }
 
     //Saving Player and Team details after the game is over
 
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
-        teamPersistence.save(game.getBattingTeam().getTeamName());
-        teamPersistence.save(game.getBowlingTeam().getTeamName());
+        teamPersistence.elasticSave(game.getBattingTeam().getTeamName());
+        teamPersistence.elasticSave(game.getBowlingTeam().getTeamName());
         GameDao gameDao = gameRepository.findById(game.getId()).get();
         Timestamp currentDate = new Timestamp(System.currentTimeMillis());
         gameDao.setEndDate(currentDate);

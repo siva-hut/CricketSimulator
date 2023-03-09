@@ -56,7 +56,7 @@ public class TeamPersistence {
 
     public void persist(String teamName) {
         TeamDao teamDao = EntityBuilder.buildTeamDao(teamName);
-        elasticSave(teamRepository.save(teamDao));
+        elasticSearchTeamRepository.save(teamDao);
     }
 
     //Updating Team wins and losses
@@ -79,10 +79,7 @@ public class TeamPersistence {
         teamRepository.save(teamDao1);
         teamRepository.save(teamDao2);
     }
-    private void elasticSave(TeamDao teamDao){
-        elasticSearchTeamRepository.save(teamDao);
-    }
-    public void save(String teamName){
+    public void elasticSave(String teamName){
         elasticSearchTeamRepository.save(teamRepository.findByName(teamName));
     }
 }

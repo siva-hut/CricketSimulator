@@ -20,8 +20,4 @@ public class EsBallDataController {
     public GetAllBallDetailResponse getBallDetailsByGameId(@RequestParam Long gameId) {
         return esBallDataService.getBallDetailsByGameId(gameId);
     }
-//    @GetMapping("/getNumberOfNoBallsInGame")
-//    public int getNumberOfNoBallsInGame(@RequestParam Long gameId){
-//
-//    }
 }
