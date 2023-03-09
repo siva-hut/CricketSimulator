@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerFactory {
-    private static Player createPlayer(PlayerDao playerDao) {
+    public static Player createPlayer(PlayerDao playerDao) {
         Player player;
         if (playerDao.getPlayerType().equals("Bowler")) {
             player = getBowler(playerDao.getName());

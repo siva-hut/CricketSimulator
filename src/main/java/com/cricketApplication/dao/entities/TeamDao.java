@@ -1,8 +1,13 @@
 package com.cricketApplication.dao.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 
@@ -13,14 +18,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Team")
+@Document(indexName = "team")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TeamDao {
+    @org.springframework.data.annotation.Id
     @Id
     @Column(name = "TeamName")
     private String name;
     private int gamesWon;
     private int gamesLost;
     private int gamesDrew;
-    @JsonIgnore
-    @OneToMany( fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "team")
+    @JsonManagedReference
+    @OneToMany( fetch=FetchType.EAGER, mappedBy = "team")
+    @Field(type = FieldType.Nested, includeInParent = true)
     private List<PlayerDao> players;
 }

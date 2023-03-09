@@ -5,6 +5,7 @@ import com.cricketApplication.cricketGame.player.Player;
 import com.cricketApplication.cricketGame.player.PlayerFactory;
 import com.cricketApplication.cricketGame.util.RandomGenerator;
 import com.cricketApplication.dao.EntityBuilder;
+import com.cricketApplication.dao.elasticSearchRepository.ElasticSearchTeamRepository;
 import com.cricketApplication.dao.entities.PlayerDao;
 import com.cricketApplication.dao.entities.TeamDao;
 import com.cricketApplication.dao.repositories.PlayerRepository;
@@ -25,6 +26,8 @@ public class TeamPersistence {
     private TeamRepository teamRepository;
     @Autowired
     private PlayerPersistence playerPersistence;
+    @Autowired
+    private ElasticSearchTeamRepository elasticSearchTeamRepository;
 
     public void persistAndLoadPlayers(Team team) {
         if (teamRepository.findByName(team.getTeamName()) == null) {
@@ -52,7 +55,8 @@ public class TeamPersistence {
     }
 
     public void persist(String teamName) {
-        teamRepository.save(EntityBuilder.buildTeamDao(teamName));
+        TeamDao teamDao = EntityBuilder.buildTeamDao(teamName);
+        elasticSave(teamRepository.save(teamDao));
     }
 
     //Updating Team wins and losses
@@ -74,5 +78,11 @@ public class TeamPersistence {
         }
         teamRepository.save(teamDao1);
         teamRepository.save(teamDao2);
+    }
+    private void elasticSave(TeamDao teamDao){
+        elasticSearchTeamRepository.save(teamDao);
+    }
+    public void save(String teamName){
+        elasticSearchTeamRepository.save(teamRepository.findByName(teamName));
     }
 }

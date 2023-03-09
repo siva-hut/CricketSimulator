@@ -4,18 +4,18 @@ import com.cricketApplication.cricketGame.Game;
 import com.cricketApplication.cricketGame.Team;
 import com.cricketApplication.cricketGame.player.Player;
 import com.cricketApplication.dao.EntityBuilder;
+import com.cricketApplication.dao.elasticSearchRepository.ElasticGameRepository;
 import com.cricketApplication.dao.entities.GameDao;
 import com.cricketApplication.dao.repositories.*;
-import jakarta.persistence.LockModeType;
-import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.Date;
 @Component
+@Slf4j
 public class GamePersistence {
     @Autowired
     @Lazy
@@ -35,9 +35,9 @@ public class GamePersistence {
     @Autowired
     @Lazy
     private TeamStatsPersistence teamStatsPersistence;
-    public GameDao save(GameDao gameDao){
-        return gameRepository.save(gameDao);
-    }
+    @Autowired
+    @Lazy
+    private ElasticGameRepository elasticGameRepository;
     public GameDao findById(Long id){
         return gameRepository.findById(id).get();
     }
@@ -66,11 +66,21 @@ public class GamePersistence {
 
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
+        teamPersistence.save(game.getBattingTeam().getTeamName());
+        teamPersistence.save(game.getBowlingTeam().getTeamName());
         GameDao gameDao = gameRepository.findById(game.getId()).get();
         Timestamp currentDate = new Timestamp(System.currentTimeMillis());
         gameDao.setEndDate(currentDate);
         gameDao.setGameActive(false);
+        log.debug("gameId: "+game.getId()+" ENDED");
+        save(gameDao);
+    }
+    public void save(GameDao gameDao){
         gameRepository.save(gameDao);
+        elasticGameRepository.save(gameDao);
+        System.out.println(gameDao.getEndDate());
+    }
+    private void updateTeamAndTeamStats(Game game){
         teamPersistence.updateTeam(game.getBattingTeam(), game.getBowlingTeam());
         teamStatsPersistence.updateTeamStats(game.getBowlingTeam(), game.getBattingTeam().getBattingOvers(), game.getId());
         teamStatsPersistence.updateTeamStats(game.getBattingTeam(), game.getBowlingTeam().getBattingOvers(), game.getId());

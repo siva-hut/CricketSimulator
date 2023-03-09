@@ -34,9 +34,6 @@ public class PlayerPersistence {
         save(playerDao);
     }
     public PlayerDao save(PlayerDao playerDao){
-        elasticPlayerRepository.findAll().forEach(playerDao1 -> {
-            System.out.println(playerDao1.getId());
-        });
         playerRepository.save(playerDao);
         elasticPlayerRepository.save(playerDao);
         return playerDao;

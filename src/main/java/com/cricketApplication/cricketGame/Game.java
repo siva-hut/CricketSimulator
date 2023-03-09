@@ -28,18 +28,13 @@ public class Game {
         prepareGame();
         gameProperties.noBall = false;
         switch (run) {
-            case 'w':
-                gameProperties.setWicketSimulation(true);
-                break;
-            case 'W':
-                wideSimulation();
-                break;
-            case 'N':
+            case 'w' -> gameProperties.setWicketSimulation(true);
+            case 'W' -> wideSimulation();
+            case 'N' -> {
                 gameProperties.setNoBall(true);
                 overs.reBall();
-                break;
-            default:
-                runSimulation();
+            }
+            default -> runSimulation();
         }
         if (overs.overCompleted()) {
             bowlingTeam.changeBowler();

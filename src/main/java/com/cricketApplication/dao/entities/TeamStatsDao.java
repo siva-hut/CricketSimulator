@@ -2,6 +2,7 @@ package com.cricketApplication.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 @Builder
 @AllArgsConstructor
@@ -10,7 +11,9 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "TeamStats")
+@Document(indexName = "cricket")
 public class TeamStatsDao {
+    @org.springframework.data.annotation.Id
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)

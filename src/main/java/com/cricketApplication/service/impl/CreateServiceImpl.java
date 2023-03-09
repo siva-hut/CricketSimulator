@@ -2,24 +2,22 @@ package com.cricketApplication.service.impl;
 
 import com.cricketApplication.PersistenceLayer.PlayerPersistence;
 import com.cricketApplication.PersistenceLayer.TeamPersistence;
-import com.cricketApplication.cricketGame.Game;
 import com.cricketApplication.cricketGame.GameBuilder;
 import com.cricketApplication.cricketGame.util.RandomGenerator;
+import com.cricketApplication.dao.EntityBuilder;
 import com.cricketApplication.dao.entities.PlayerDao;
-import com.cricketApplication.dao.repositories.PlayerRepository;
 import com.cricketApplication.dao.repositories.TeamRepository;
 import com.cricketApplication.dataModels.request.CreateGameRequest;
 import com.cricketApplication.dataModels.request.CreatePlayerRequest;
 import com.cricketApplication.dataModels.request.CreateTeamRequest;
-import com.cricketApplication.dataModels.response.CreateGameResponse;
-import com.cricketApplication.dataModels.response.CreatePlayerResponse;
+import com.cricketApplication.dataModels.response.create.CreateGameResponse;
+import com.cricketApplication.dataModels.response.create.CreatePlayerResponse;
 import com.cricketApplication.service.interfaces.CreateService;
 import com.cricketApplication.service.interfaces.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Random;
 
 @Service
 public class CreateServiceImpl implements CreateService {
@@ -47,11 +45,10 @@ public class CreateServiceImpl implements CreateService {
             String randomPlayerType = RandomGenerator.getRandomPlayerType();
             createPlayerRequest.setPlayerType(randomPlayerType);
         }
-
-        PlayerDao playerDao = PlayerDao.builder().name(createPlayerRequest.getPlayerName()).
-                teamName(createPlayerRequest.getTeamName()).
-                playerType(createPlayerRequest.getPlayerType())
-                .build();
+        String playerName = createPlayerRequest.getPlayerName();
+        String playerType = createPlayerRequest.getPlayerType();
+        String teamName = createPlayerRequest.getTeamName();
+        PlayerDao playerDao = EntityBuilder.buildPlayerDao(playerName,playerType,teamName);
         playerPersistence.save(playerDao);
         return CreatePlayerResponse.createPlayerResponse(playerDao.getId());
     }

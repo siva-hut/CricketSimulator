@@ -8,15 +8,17 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+
+import java.net.UnknownHostException;
 
 @Configuration
 public class ElasticSearchConfiguration
 {
     @Bean
     public RestClient getRestClient() {
-        RestClient restClient = RestClient.builder(
+        return RestClient.builder(
                 new HttpHost("localhost", 9200)).build();
-        return restClient;
     }
 
     @Bean
@@ -28,8 +30,11 @@ public class ElasticSearchConfiguration
 
     @Bean
     public ElasticsearchClient getElasticsearchClient(){
-        ElasticsearchClient client = new ElasticsearchClient(getElasticsearchTransport());
-        return client;
+        return new ElasticsearchClient(getElasticsearchTransport());
+    }
+    @Bean
+    public ElasticsearchTemplate elasticsearchTemplate() throws UnknownHostException {
+        return new ElasticsearchTemplate(getElasticsearchClient());
     }
 
 }
