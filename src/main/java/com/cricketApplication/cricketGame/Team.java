@@ -73,9 +73,10 @@ public class Team {
             }
             index++;
         }
+        increaseWicketLost();
     }
 
-    protected void increaseWicketLost() {
+    private void increaseWicketLost() {
         wicketsLost++;
     }
 

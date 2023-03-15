@@ -17,7 +17,8 @@ public class BackGroundService {
     private GameRepository gameRepository;
     @Autowired
     private GameService gameService;
-//    Runs once everytime the application starts
+    // Runs once everytime the application starts
+    // start all the games that have not been completed
     @EventListener(ApplicationReadyEvent.class)
     public void startPastGames(){
         Timestamp currentDate = new Timestamp(System.currentTimeMillis());
@@ -27,6 +28,7 @@ public class BackGroundService {
         }
     }
     //Runs every second
+    // start games that are scheduled for the future
     @Scheduled(fixedRate=1000)
     public void StartFutureGames(){
         Timestamp currentDate = new Timestamp(System.currentTimeMillis());

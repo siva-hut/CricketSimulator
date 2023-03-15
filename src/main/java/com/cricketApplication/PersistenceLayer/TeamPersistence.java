@@ -76,10 +76,12 @@ public class TeamPersistence {
             teamDao1.setGamesDrew(teamDao1.getGamesDrew() + 1);
             teamDao2.setGamesDrew(teamDao2.getGamesDrew() + 1);
         }
-        teamRepository.save(teamDao1);
-        teamRepository.save(teamDao2);
+        save(teamDao1);
+        save(teamDao2);
     }
-    public void elasticSave(String teamName){
-        elasticSearchTeamRepository.save(teamRepository.findByName(teamName));
+    public void save(TeamDao teamDao)
+    {
+        teamRepository.save(teamDao);
+        elasticSearchTeamRepository.save(teamDao);
     }
 }

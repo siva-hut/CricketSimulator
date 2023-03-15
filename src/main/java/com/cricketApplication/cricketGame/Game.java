@@ -26,7 +26,6 @@ public class Game {
     public void simulateNextBall(char run) {
         this.run = run;
         prepareGame();
-        gameProperties.noBall = false;
         switch (run) {
             case 'w' -> gameProperties.setWicketSimulation(true);
             case 'W' -> wideSimulation();
@@ -43,6 +42,7 @@ public class Game {
     }
 
     private void prepareGame() {
+        gameProperties.noBall = false;
         if (gameProperties.isSwitchSides()) {
             switchSides();
         }
@@ -102,7 +102,6 @@ public class Game {
 
     private void simulateWicket() {
         bowlingTeam.getBowler().wicketTaken();
-        getBattingTeam().increaseWicketLost();
         battingTeam.nextBatsman();
     }
 }

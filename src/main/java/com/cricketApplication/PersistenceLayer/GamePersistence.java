@@ -67,8 +67,7 @@ public class GamePersistence {
 
     public void persistGameOnCompletion(Game game) {
         updatePlayerAndPlayerStats(game);
-        teamPersistence.elasticSave(game.getBattingTeam().getTeamName());
-        teamPersistence.elasticSave(game.getBowlingTeam().getTeamName());
+        updateTeamAndTeamStats(game);
         GameDao gameDao = gameRepository.findById(game.getId()).get();
         Timestamp currentDate = new Timestamp(System.currentTimeMillis());
         gameDao.setEndDate(currentDate);
@@ -79,7 +78,6 @@ public class GamePersistence {
     public void save(GameDao gameDao){
         gameRepository.save(gameDao);
         elasticGameRepository.save(gameDao);
-        System.out.println(gameDao.getEndDate());
     }
     private void updateTeamAndTeamStats(Game game){
         teamPersistence.updateTeam(game.getBattingTeam(), game.getBowlingTeam());

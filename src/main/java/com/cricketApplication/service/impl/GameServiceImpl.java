@@ -14,8 +14,8 @@ import java.util.*;
 
 @Service
 public class GameServiceImpl implements GameService {
-    public static List<Game> activeGameArray = Collections.synchronizedList(new ArrayList<Game>());
-    public static Map<Long, Integer> hashMap = new HashMap<Long, Integer>();
+    private static final List<Game> activeGameArray = Collections.synchronizedList(new ArrayList<Game>());
+    private static final Map<Long, Integer> hashMap = new HashMap<Long, Integer>();
     @Autowired
     private GamePersistence gamePersistence;
     @Autowired
