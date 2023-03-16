@@ -1,9 +1,9 @@
 
 # Cricket simulation
 
-Cricket module which can be used to simlate a cricket game.
+Cricket module which can be used to simulate a cricket game.
 
-Spring application uses the cricket module for CURD operations on DB (SQL,elasticsearch) and returns results to the respective APIs.
+Spring application uses the cricket module to start a game and simulate the next ball, performs CURD operations on DB (SQL,elasticsearch) and returns results to the respective APIs.
 
 
 
